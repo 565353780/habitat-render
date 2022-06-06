@@ -6,12 +6,12 @@ from PIL import Image
 from matplotlib import pyplot as plt
 from habitat_sim.utils.common import d3_40_colors_rgb
 
-def display_sample(rgb_obs=None, semantic_obs=None, depth_obs=None):
-    if rgb_obs is None and semantic_obs is None and depth_obs is None:
+def display_sample(rgb_obs=None, depth_obs=None, semantic_obs=None):
+    if rgb_obs is None and depth_obs is None and semantic_obs is None:
         return True
 
-    semantic_img = None
     depth_img = None
+    semantic_img = None
 
     arr = []
     titles = []
@@ -20,6 +20,11 @@ def display_sample(rgb_obs=None, semantic_obs=None, depth_obs=None):
         arr.append(rgb_obs)
         titles.append('rgb')
 
+    if depth_obs is not None:
+        depth_img = Image.fromarray((depth_obs * 255).astype(np.uint8), mode="L")
+        arr.append(depth_img)
+        titles.append('depth')
+
     if semantic_img is not None:
         semantic_img = Image.new("P", (semantic_obs.shape[1], semantic_obs.shape[0]))
         semantic_img.putpalette(d3_40_colors_rgb.flatten())
@@ -27,11 +32,6 @@ def display_sample(rgb_obs=None, semantic_obs=None, depth_obs=None):
         semantic_img = semantic_img.convert("RGBA")
         arr.append(semantic_obs)
         titles.append('semantic')
-
-    if depth_obs is not None:
-        depth_img = Image.fromarray((depth_obs * 255).astype(np.uint8), mode="L")
-        arr.append(depth_img)
-        titles.append('depth')
 
     plt.figure(figsize=(12 ,8))
     for i, data in enumerate(arr):
