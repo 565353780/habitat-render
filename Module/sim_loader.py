@@ -20,10 +20,13 @@ class SimLoader(object):
 
     def reset(self):
         self.cfg = None
-        self.sim = None # TODO: close sim
+        if self.sim is not None:
+            self.sim.close()
+        self.sim = None
         return True
 
     def loadGLB(self, sim_settings):
+        self.reset()
         self.cfg = make_cfg(sim_settings)
         self.sim = habitat_sim.Simulator(self.cfg)
         return True
