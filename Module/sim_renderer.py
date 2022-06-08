@@ -70,7 +70,7 @@ class SimRenderer(SimController):
             plt.imshow(data)
         return True
 
-    def keyboardControlRender(self):
+    def keyBoardControlRender(self):
         plt.figure(figsize=(12 ,8))
         plt.ion()
 
@@ -83,7 +83,7 @@ class SimRenderer(SimController):
             print("agent_state: position", agent_state.position,
                   "rotation", agent_state.rotation)
 
-            if not self.keyboardControl():
+            if not self.keyBoardControl():
                 break
         return True
 
@@ -108,9 +108,9 @@ def demo():
     sim_renderer.loadGLB(sim_settings)
 
     sim_renderer.initAgent()
-    sim_renderer.setAgentState([0.0, 0.0, 0.0])
+    sim_renderer.setAgentState([-0.6, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0])
 
-    sim_renderer.keyboardControlRender()
+    sim_renderer.keyBoardControlRender()
     return True
 
 if __name__ == "__main__":
