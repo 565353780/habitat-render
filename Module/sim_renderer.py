@@ -60,7 +60,6 @@ class SimRenderer(SimController):
             ax.axis('off')
             ax.set_title(titles[i])
             plt.imshow(data)
-        #  plt.legend()
         return True
 
     def render(self):
