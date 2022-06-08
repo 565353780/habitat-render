@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-from getch import getch
 from PIL import Image
 from matplotlib import pyplot as plt
 from habitat_sim.utils.common import d3_40_colors_rgb
@@ -71,37 +70,21 @@ class SimRenderer(SimController):
             plt.imshow(data)
         return True
 
-    def render(self):
+    def keyboardControlRender(self):
         plt.figure(figsize=(12 ,8))
         plt.ion()
 
         while True:
-            agent_state = self.getAgentState()
-            print("agent_state: position", agent_state.position,
-                  "rotation", agent_state.rotation)
-
             if not self.renderFrame():
                 break
             plt.pause(0.001)
 
-            input_key = getch()
+            agent_state = self.getAgentState()
+            print("agent_state: position", agent_state.position,
+                  "rotation", agent_state.rotation)
 
-            if input_key == "q":
-                plt.ioff()
+            if not self.keyboardControl():
                 break
-
-            if input_key == "e":
-                self.stepAction("move_forward")
-                continue
-            if input_key == "s":
-                self.stepAction("turn_left")
-                continue
-            if input_key == "f":
-                self.stepAction("turn_right")
-                continue
-
-            print("[WARN][SimRenderer::render]")
-            print("\t input_key out of range!")
         return True
 
 def demo():
@@ -127,14 +110,7 @@ def demo():
     sim_renderer.initAgent()
     sim_renderer.setAgentState([0.0, 0.0, 0.0])
 
-    agent_state = sim_renderer.getAgentState()
-    print("agent_state: position", agent_state.position,
-          "rotation", agent_state.rotation)
-
-    action_names = sim_renderer.action_names
-    print("Discrete action space: ", action_names)
-
-    sim_renderer.render()
+    sim_renderer.keyboardControlRender()
     return True
 
 if __name__ == "__main__":

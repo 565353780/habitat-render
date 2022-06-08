@@ -3,6 +3,7 @@
 
 import numpy as np
 import habitat_sim
+from getch import getch
 from random import randint
 from habitat_sim.utils.common import quat_from_angle_axis
 
@@ -63,6 +64,38 @@ class SimController(SimLoader):
         agent_state = self.agent.get_state()
         return agent_state
 
+    def keyboardControl(self):
+        input_key = getch()
+
+        if input_key == "q":
+            return False
+
+        if input_key == "e":
+            self.stepAction("move_forward")
+            return True
+            
+        if input_key == "j":
+            self.stepAction("turn_left")
+            return True
+
+        if input_key == "l":
+            self.stepAction("turn_right")
+            return True
+
+        print("[WARN][SimController::keyboardControl]")
+        print("\t input_key out of range!")
+        return True
+
+    def startControl(self):
+        while True:
+            agent_state = self.getAgentState()
+            print("agent_state: position", agent_state.position,
+                  "rotation", agent_state.rotation)
+
+            if not self.keyboardControl():
+                break
+        return True
+
 def demo():
     glb_file_path = \
         "/home/chli/habitat/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
@@ -86,19 +119,7 @@ def demo():
     sim_controller.initAgent()
     sim_controller.setAgentState([-0.6, 0.0, 0.0])
 
-    agent_state = sim_controller.getAgentState()
-    print("agent_state: position", agent_state.position,
-          "rotation", agent_state.rotation)
-
-    action_names = sim_controller.action_names
-    print("Discrete action space: ", action_names)
-
-    for _ in range(100):
-        action = action_names[randint(0, len(action_names) - 1)]
-        print("action: ", action)
-        sim_controller.stepAction(action)
-        agent_state = sim_controller.getAgentState()
-        print("agent_state: position", agent_state.position, "rotation", agent_state.rotation)
+    sim_controller.startControl()
     return True
 
 if __name__ == "__main__":
