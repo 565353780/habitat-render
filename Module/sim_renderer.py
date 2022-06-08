@@ -18,9 +18,18 @@ class SimRenderer(SimController):
         if self.observations is None:
             return True
 
-        rgb_obs = self.observations["color_sensor"]
-        depth_obs = self.observations["depth_sensor"]
-        semantic_obs = self.observations["semantic_sensor"]
+        observations_keys = self.observations.keys()
+
+        rgb_obs = None
+        depth_obs = None
+        semantic_obs = None
+
+        if "color_sensor" in observations_keys:
+            rgb_obs = self.observations["color_sensor"]
+        if "depth_sensor" in observations_keys:
+            depth_obs = self.observations["depth_sensor"]
+        if "semantic_sensor" in observations_keys:
+            semantic_obs = self.observations["semantic_sensor"]
 
         if rgb_obs is None and \
                 depth_obs is None and \
