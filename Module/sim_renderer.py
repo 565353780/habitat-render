@@ -90,6 +90,9 @@ class SimRenderer(SimController):
             if input_key == "f":
                 self.stepAction("turn_right")
                 continue
+
+            print("[WARN][SimRenderer::render]")
+            print("\t input_key out of range!")
         return True
 
 def demo():
