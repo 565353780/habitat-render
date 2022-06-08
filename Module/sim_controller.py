@@ -55,6 +55,8 @@ class SimController(SimLoader):
         if rotation is not None:
             agent_state.rotation = np.array(rotation)
         self.agent.set_state(agent_state)
+
+        self.observations = self.sim.get_sensor_observations()
         return True
 
     def getAgentState(self):
@@ -80,8 +82,9 @@ def demo():
 
     sim_controller = SimController()
     sim_controller.loadGLB(sim_settings)
+
     sim_controller.initAgent()
-    sim_controller.setAgentState([0.0, 0.0, 0.0])
+    sim_controller.setAgentState([-0.6, 0.0, 0.0])
 
     agent_state = sim_controller.getAgentState()
     print("agent_state: position", agent_state.position,

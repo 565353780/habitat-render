@@ -114,6 +114,7 @@ def demo():
 
     sim_renderer = SimRenderer()
     sim_renderer.loadGLB(sim_settings)
+
     sim_renderer.initAgent()
     sim_renderer.setAgentState([0.0, 0.0, 0.0])
 
