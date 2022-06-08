@@ -7,5 +7,6 @@ from Module.sim_renderer import demo as render_demo
 
 if __name__ == "__main__":
     #  load_demo()
-    control_demo()
+    #  control_demo()
+    render_demo()
 

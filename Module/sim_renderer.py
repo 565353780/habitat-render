@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from getch import getch
-
 import numpy as np
+from getch import getch
 from PIL import Image
 from matplotlib import pyplot as plt
 from habitat_sim.utils.common import d3_40_colors_rgb
@@ -23,9 +22,9 @@ class SimRenderer(SimController):
         depth_obs = self.observations["depth_sensor"]
         semantic_obs = self.observations["semantic_sensor"]
 
-        if self.rgb_obs is None and \
-                self.depth_obs is None and \
-                self.semantic_obs is None:
+        if rgb_obs is None and \
+                depth_obs is None and \
+                semantic_obs is None:
             return True
 
         plt.cla()
@@ -36,22 +35,22 @@ class SimRenderer(SimController):
         arr = []
         titles = []
 
-        if self.rgb_obs is not None:
-            arr.append(self.rgb_obs)
+        if rgb_obs is not None:
+            arr.append(rgb_obs)
             titles.append('rgb')
 
-        if self.depth_obs is not None:
+        if depth_obs is not None:
             depth_img = Image.fromarray(
-                (self.depth_obs * 255).astype(np.uint8),
+                (depth_obs * 255).astype(np.uint8),
                 mode="L")
             arr.append(depth_img)
             titles.append('depth')
 
-        if self.semantic_obs is not None:
+        if semantic_obs is not None:
             semantic_img = Image.new("P",
-                (self.semantic_obs.shape[1], self.semantic_obs.shape[0]))
+                (semantic_obs.shape[1], semantic_obs.shape[0]))
             semantic_img.putpalette(d3_40_colors_rgb.flatten())
-            semantic_img.putdata((self.semantic_obs.flatten() % 40).astype(np.uint8))
+            semantic_img.putdata((semantic_obs.flatten() % 40).astype(np.uint8))
             semantic_img = semantic_img.convert("RGBA")
             arr.append(semantic_img)
             titles.append('semantic')
@@ -61,7 +60,7 @@ class SimRenderer(SimController):
             ax.axis('off')
             ax.set_title(titles[i])
             plt.imshow(data)
-        plt.legend()
+        #  plt.legend()
         return True
 
     def render(self):
@@ -69,9 +68,29 @@ class SimRenderer(SimController):
         plt.ion()
 
         while True:
+            agent_state = self.getAgentState()
+            print("agent_state: position", agent_state.position,
+                  "rotation", agent_state.rotation)
+
             if not self.renderFrame():
                 break
             plt.pause(0.001)
+
+            input_key = getch()
+
+            if input_key == "q":
+                plt.ioff()
+                break
+
+            if input_key == "e":
+                self.stepAction("move_forward")
+                continue
+            if input_key == "s":
+                self.stepAction("turn_left")
+                continue
+            if input_key == "f":
+                self.stepAction("turn_right")
+                continue
         return True
 
 def demo():
@@ -91,24 +110,19 @@ def demo():
         "enable_physics": False,
     }
 
-    sim_controller = SimController()
-    sim_controller.loadGLB(sim_settings)
-    sim_controller.initAgent()
-    sim_controller.setAgentState([0.0, 0.0, 0.0])
+    sim_renderer = SimRenderer()
+    sim_renderer.loadGLB(sim_settings)
+    sim_renderer.initAgent()
+    sim_renderer.setAgentState([0.0, 0.0, 0.0])
 
-    agent_state = sim_controller.getAgentState()
+    agent_state = sim_renderer.getAgentState()
     print("agent_state: position", agent_state.position,
           "rotation", agent_state.rotation)
 
-    action_names = sim_controller.action_names
+    action_names = sim_renderer.action_names
     print("Discrete action space: ", action_names)
 
-    for _ in range(100):
-        action = action_names[randint(0, len(action_names) - 1)]
-        print("action: ", action)
-        sim_controller.stepAction(action, True)
-        agent_state = sim_controller.getAgentState()
-        print("agent_state: position", agent_state.position, "rotation", agent_state.rotation)
+    sim_renderer.render()
     return True
 
 if __name__ == "__main__":

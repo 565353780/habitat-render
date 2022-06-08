@@ -30,6 +30,8 @@ class SimController(SimLoader):
 
     def stepAction(self, action):
         if action not in self.action_names:
+            print("[ERROR][SimController::stepAction]")
+            print("\t action out of range!")
             return False
         self.observations = self.sim.step(action)
         return True
