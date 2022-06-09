@@ -37,9 +37,6 @@ class SimRenderer(SimController):
 
         plt.cla()
 
-        depth_img = None
-        semantic_img = None
-
         arr = []
         titles = []
 
@@ -48,19 +45,19 @@ class SimRenderer(SimController):
             titles.append('rgb')
 
         if depth_obs is not None:
-            depth_img = Image.fromarray(
-                (depth_obs * 255).astype(np.uint8),
-                mode="L")
-            arr.append(depth_img)
+            #  depth_img = np.clip(depth_obs, 0, 10) / 10.0
+            arr.append(depth_obs)
             titles.append('depth')
 
         if semantic_obs is not None:
-            semantic_img = Image.new("P",
-                (semantic_obs.shape[1], semantic_obs.shape[0]))
-            semantic_img.putpalette(d3_40_colors_rgb.flatten())
-            semantic_img.putdata((semantic_obs.flatten() % 40).astype(np.uint8))
-            semantic_img = semantic_img.convert("RGBA")
-            arr.append(semantic_img)
+
+            #  semantic_img = Image.new("P",
+                #  (semantic_obs.shape[1], semantic_obs.shape[0]))
+            #  semantic_img.putpalette(d3_40_colors_rgb.flatten())
+            #  semantic_img.putdata((semantic_obs.flatten() % 40).astype(np.uint8))
+            #  semantic_img = semantic_img.convert("RGBA")
+
+            arr.append(semantic_obs)
             titles.append('semantic')
 
         for i, data in enumerate(arr):
@@ -70,8 +67,9 @@ class SimRenderer(SimController):
             plt.imshow(data)
         return True
 
-    def keyBoardControlRender(self):
-        plt.figure(figsize=(12 ,8))
+    def startKeyBoardControlRender(self):
+        #  self.resetAgentPose()
+        plt.figure(figsize=(24, 8))
         plt.ion()
 
         while True:
@@ -96,7 +94,7 @@ def demo():
         "height": 256,
         "scene": glb_file_path,
         "default_agent": 0,
-        "sensor_height": 1.5,
+        "sensor_height": 0,
         "color_sensor": True,
         "depth_sensor": True,
         "semantic_sensor": True,
@@ -108,9 +106,10 @@ def demo():
     sim_renderer.loadGLB(sim_settings)
 
     sim_renderer.initAgent()
-    sim_renderer.setAgentPose([2.7, -3.0, 0.0], [1.0, 1.0, -0.5])
+    sim_renderer.setAgentPose([2.7, -3.0, 1.0], [1.0, 1.0, -0.5])
+    sim_renderer.setAgentLookAt([2.7, -3.0, 1.5], [1.0, -4.5, 0.5])
 
-    sim_renderer.keyBoardControlRender()
+    sim_renderer.startKeyBoardControlRender()
     return True
 
 if __name__ == "__main__":

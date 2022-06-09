@@ -100,6 +100,34 @@ class SimController(SimLoader):
             return False
         return True
 
+    def setAgentLookAt(self, position, look_at):
+        direction = [look_at[i] - position[i] for i in range(3)]
+
+        if not self.setAgentPose(position, direction):
+            print("[ERROR][SimController::setAgentLookAt]")
+            print("\t setAgentPose failed!")
+            return False
+        return True
+
+    def setAgentFromLookAt(self, look_at, move_direction):
+        position = [look_at[i] + move_direction[i] for i in range(3)]
+
+        if not self.setAgentLookAt(position, look_at):
+            print("[ERROR][SimController::setAgentFromLookAt]")
+            print("\t setAgentLookAt failed!")
+            return False
+        return True
+
+    def resetAgentPose(self):
+        position = [0.0, 0.0, 0.0]
+        direction = [1.0, 0.0, 0.0]
+
+        if not self.setAgentPose(position, direction):
+            print("[ERROR][SimController::resetAgentPose]")
+            print("\t setAgentPose failed!")
+            return False
+        return True
+
     def keyBoardControl(self):
         input_key = getch()
 
@@ -119,7 +147,9 @@ class SimController(SimLoader):
             return False
         return True
 
-    def startControl(self):
+    def startKeyBoardControl(self):
+        self.resetAgentPose()
+
         while True:
             agent_state = self.getAgentState()
             print("agent_state: position", agent_state.position,
@@ -138,7 +168,7 @@ def demo():
         "height": 256,
         "scene": glb_file_path,
         "default_agent": 0,
-        "sensor_height": 1.5,
+        "sensor_height": 0,
         "color_sensor": True,
         "depth_sensor": True,
         "semantic_sensor": True,
@@ -151,8 +181,9 @@ def demo():
 
     sim_controller.initAgent()
     sim_controller.setAgentPose([2.7, -3.0, 0.0], [1.0, 1.0, -0.5])
+    sim_controller.setAgentLookAt([2.7, -3.0, 0.0], [1.0, -4.5, 1.0])
 
-    sim_controller.startControl()
+    sim_controller.startKeyBoardControl()
     return True
 
 if __name__ == "__main__":
