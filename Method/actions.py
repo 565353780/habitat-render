@@ -12,10 +12,38 @@ from habitat_sim.agent import ActuationSpec
 from habitat_sim.utils.common import \
     quat_from_angle_axis, quat_rotate_vector
 
+def getForwardDirection(scene_node):
+    forward_ax = (
+        np.array(scene_node.absolute_transformation().rotation_scaling())
+        @ habitat_sim.geo.FRONT
+    )
+    return forward_ax
+
+def getUpAngleDirection(scene_node, up_angle):
+    forward_ax = getForwardDirection(scene_node)
+    rotation = quat_from_angle_axis(np.deg2rad(up_angle), habitat_sim.geo.UP)
+    move_ax = quat_rotate_vector(rotation, forward_ax)
+    return move_ax 
+
+def getLeftDirection(scene_node):
+    return getUpAngleDirection(scene_node, 90.0)
+
+def getRightDirection(scene_node):
+    return getUpAngleDirection(scene_node, -90.0)
+
+def getBackDirection(scene_node):
+    return getUpAngleDirection(scene_node, 180.0)
+
 def moveWithDirection(scene_node, direction, amount):
     move_ax = (
         np.array(scene_node.absolute_transformation().rotation_scaling())
         @ direction)
+
+    print("========")
+    print(np.array(scene_node.absolute_transformation().rotation_scaling()))
+    print(move_ax)
+    print("====!!!!")
+
     scene_node.translate_local(move_ax * amount)
     return True
 
@@ -36,7 +64,8 @@ class MoveLeft(habitat_sim.SceneNodeControl):
     def __call__(self,
                  scene_node: habitat_sim.SceneNode,
                  actuation_spec: ActuationSpec):
-        moveWithDirection(scene_node, habitat_sim.geo.LEFT, actuation_spec.amount)
+        left_ax = getLeftDirection(scene_node)
+        moveWithDirection(scene_node, left_ax, actuation_spec.amount)
         return True
 
 @habitat_sim.registry.register_move_fn(body_action=True)
@@ -44,7 +73,8 @@ class MoveRight(habitat_sim.SceneNodeControl):
     def __call__(self,
                  scene_node: habitat_sim.SceneNode,
                  actuation_spec: ActuationSpec):
-        moveWithDirection(scene_node, habitat_sim.geo.RIGHT, actuation_spec.amount)
+        right_ax = getRightDirection(scene_node)
+        moveWithDirection(scene_node, right_ax, actuation_spec.amount)
         return True
 
 @habitat_sim.registry.register_move_fn(body_action=True)
@@ -52,7 +82,8 @@ class MoveBack(habitat_sim.SceneNodeControl):
     def __call__(self,
                  scene_node: habitat_sim.SceneNode,
                  actuation_spec: ActuationSpec):
-        moveWithDirection(scene_node, habitat_sim.geo.BACK, actuation_spec.amount)
+        back_ax = getBackDirection(scene_node)
+        moveWithDirection(scene_node, back_ax, actuation_spec.amount)
         return True
 
 @habitat_sim.registry.register_move_fn(body_action=True)
@@ -60,7 +91,8 @@ class HeadUp(habitat_sim.SceneNodeControl):
     def __call__(self,
                  scene_node: habitat_sim.SceneNode,
                  actuation_spec: ActuationSpec):
-        rotateWithDirection(scene_node, habitat_sim.geo.RIGHT, actuation_spec.amount)
+        right_ax = getRightDirection(scene_node)
+        rotateWithDirection(scene_node, right_ax, actuation_spec.amount)
         return True
 
 @habitat_sim.registry.register_move_fn(body_action=True)
@@ -68,10 +100,11 @@ class HeadDown(habitat_sim.SceneNodeControl):
     def __call__(self,
                  scene_node: habitat_sim.SceneNode,
                  actuation_spec: ActuationSpec):
-        rotateWithDirection(scene_node, habitat_sim.geo.LEFT, actuation_spec.amount)
+        left_ax = getRightDirection(scene_node)
+        rotateWithDirection(scene_node, left_ax, actuation_spec.amount)
         return True
 
-def demo():
+def register_actions():
     habitat_sim.registry.register_move_fn(
         MoveLeft, name="move_left", body_action=True)
     habitat_sim.registry.register_move_fn(
@@ -79,9 +112,13 @@ def demo():
     habitat_sim.registry.register_move_fn(
         MoveBack, name="move_back", body_action=True)
     habitat_sim.registry.register_move_fn(
-        HeadUp, name="head_up", body_action=True)
+        HeadUp, name="turn_up", body_action=True)
     habitat_sim.registry.register_move_fn(
-        HeadDown, name="head_down", body_action=True)
+        HeadDown, name="turn_down", body_action=True)
+    return True
+
+def demo():
+    register_actions()
 
     agent_config = habitat_sim.AgentConfiguration()
 
@@ -92,9 +129,9 @@ def demo():
     agent_config.action_space["move_back"] = habitat_sim.ActionSpec(
         "move_back", ActuationSpec(0.25))
     agent_config.action_space["head_up"] = habitat_sim.ActionSpec(
-        "head_up", ActuationSpec(30.0))
+        "turn_up", ActuationSpec(30.0))
     agent_config.action_space["head_down"] = habitat_sim.ActionSpec(
-        "head_down", ActuationSpec(30.0))
+        "turn_down", ActuationSpec(30.0))
 
     action_space = agent_config.action_space
     action_names = action_space.keys()

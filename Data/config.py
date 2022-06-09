@@ -3,6 +3,8 @@
 
 import habitat_sim
 
+from Method.actions import register_actions
+
 def make_cfg(settings):
     sim_cfg = habitat_sim.SimulatorConfiguration()
     sim_cfg.gpu_device_id = 0
@@ -35,18 +37,27 @@ def make_cfg(settings):
     semantic_sensor_spec.sensor_subtype = habitat_sim.SensorSubType.PINHOLE
     sensor_specs.append(semantic_sensor_spec)
 
+    register_actions()
+
     agent_cfg = habitat_sim.agent.AgentConfiguration()
     agent_cfg.sensor_specifications = sensor_specs
     agent_cfg.action_space = {
         "move_forward": habitat_sim.agent.ActionSpec(
-            "move_forward", habitat_sim.agent.ActuationSpec(amount=0.25)
-        ),
+            "move_forward", habitat_sim.agent.ActuationSpec(amount=0.25)),
+        "move_left": habitat_sim.agent.ActionSpec(
+            "move_left", habitat_sim.agent.ActuationSpec(amount=0.25)),
+        "move_right": habitat_sim.agent.ActionSpec(
+            "move_right", habitat_sim.agent.ActuationSpec(amount=0.25)),
+        "move_back": habitat_sim.agent.ActionSpec(
+            "move_back", habitat_sim.agent.ActuationSpec(amount=0.25)),
         "turn_left": habitat_sim.agent.ActionSpec(
-            "turn_left", habitat_sim.agent.ActuationSpec(amount=30.0)
-        ),
+            "turn_left", habitat_sim.agent.ActuationSpec(amount=30.0)),
         "turn_right": habitat_sim.agent.ActionSpec(
-            "turn_right", habitat_sim.agent.ActuationSpec(amount=30.0)
-        ),
+            "turn_right", habitat_sim.agent.ActuationSpec(amount=30.0)),
+        "turn_up": habitat_sim.agent.ActionSpec(
+            "turn_up", habitat_sim.agent.ActuationSpec(amount=30.0)),
+        "turn_down": habitat_sim.agent.ActionSpec(
+            "turn_down", habitat_sim.agent.ActuationSpec(amount=30.0)),
     }
     return habitat_sim.Configuration(sim_cfg, [agent_cfg])
 
