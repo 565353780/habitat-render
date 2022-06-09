@@ -3,7 +3,9 @@
 
 import habitat_sim
 
-from Method.actions import register_actions
+from habitat_sim.agent.controls.default_controls import \
+    MoveLeft, MoveRight, MoveBackward, MoveUp, MoveDown, \
+    LookLeft, LookRight, LookUp, LookDown
 
 def make_cfg(settings):
     sim_cfg = habitat_sim.SimulatorConfiguration()
@@ -37,8 +39,6 @@ def make_cfg(settings):
     semantic_sensor_spec.sensor_subtype = habitat_sim.SensorSubType.PINHOLE
     sensor_specs.append(semantic_sensor_spec)
 
-    register_actions()
-
     agent_cfg = habitat_sim.agent.AgentConfiguration()
     agent_cfg.sensor_specifications = sensor_specs
     agent_cfg.action_space = {
@@ -50,14 +50,18 @@ def make_cfg(settings):
             "move_right", habitat_sim.agent.ActuationSpec(amount=0.25)),
         "move_back": habitat_sim.agent.ActionSpec(
             "move_back", habitat_sim.agent.ActuationSpec(amount=0.25)),
+        "move_up": habitat_sim.agent.ActionSpec(
+            "move_up", habitat_sim.agent.ActuationSpec(amount=0.25)),
+        "move_down": habitat_sim.agent.ActionSpec(
+            "move_down", habitat_sim.agent.ActuationSpec(amount=0.25)),
         "turn_left": habitat_sim.agent.ActionSpec(
             "turn_left", habitat_sim.agent.ActuationSpec(amount=30.0)),
         "turn_right": habitat_sim.agent.ActionSpec(
             "turn_right", habitat_sim.agent.ActuationSpec(amount=30.0)),
-        "turn_up": habitat_sim.agent.ActionSpec(
-            "turn_up", habitat_sim.agent.ActuationSpec(amount=30.0)),
-        "turn_down": habitat_sim.agent.ActionSpec(
-            "turn_down", habitat_sim.agent.ActuationSpec(amount=30.0)),
+        "look_up": habitat_sim.agent.ActionSpec(
+            "look_up", habitat_sim.agent.ActuationSpec(amount=30.0)),
+        "look_down": habitat_sim.agent.ActionSpec(
+            "look_down", habitat_sim.agent.ActuationSpec(amount=30.0)),
     }
     return habitat_sim.Configuration(sim_cfg, [agent_cfg])
 
