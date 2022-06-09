@@ -132,6 +132,7 @@ def register_actions():
             rotateWithDirection(scene_node, rotate_ax, actuation_spec.amount)
             return True
 
+    # not necessary, names are auto warpped, this can be used to change action's name
     habitat_sim.registry.register_move_fn(
         MoveLeft, name="move_left", body_action=True)
     habitat_sim.registry.register_move_fn(
