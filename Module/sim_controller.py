@@ -8,7 +8,6 @@ from tf import transformations
 
 import habitat_sim
 from getch import getch
-#  from habitat_sim.utils.common import quat_from_angle_axis
 
 from Module.sim_loader import SimLoader
 
@@ -29,7 +28,7 @@ class SimController(SimLoader):
         self.head_left_key = "u"
         self.head_right_key = "o"
 
-        self.move_dist = 0.1
+        self.move_dist = 1.0
         self.rotate_angle = 10
 
         self.move_key_list = [
@@ -251,7 +250,7 @@ class SimController(SimLoader):
             print("\t move_direction is None!")
             return False
 
-        if not self.moveAgent(agent_state, move_direction, move_dist):
+        if not self.moveAgent(agent_state, sim_move_direction, move_dist):
             print("[ERROR][SimController::moveForward]")
             print("\t moveAgent failed!")
             return False
