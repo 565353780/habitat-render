@@ -3,10 +3,6 @@
 
 import habitat_sim
 
-from habitat_sim.agent.controls.default_controls import \
-    MoveLeft, MoveRight, MoveBackward, MoveUp, MoveDown, \
-    LookLeft, LookRight, LookUp, LookDown
-
 def make_cfg(settings):
     sim_cfg = habitat_sim.SimulatorConfiguration()
     sim_cfg.gpu_device_id = 0
