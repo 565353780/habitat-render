@@ -44,8 +44,8 @@ def make_cfg(settings):
             "move_left", habitat_sim.agent.ActuationSpec(amount=0.25)),
         "move_right": habitat_sim.agent.ActionSpec(
             "move_right", habitat_sim.agent.ActuationSpec(amount=0.25)),
-        "move_back": habitat_sim.agent.ActionSpec(
-            "move_back", habitat_sim.agent.ActuationSpec(amount=0.25)),
+        "move_backward": habitat_sim.agent.ActionSpec(
+            "move_backward", habitat_sim.agent.ActuationSpec(amount=0.25)),
         "move_up": habitat_sim.agent.ActionSpec(
             "move_up", habitat_sim.agent.ActuationSpec(amount=0.25)),
         "move_down": habitat_sim.agent.ActionSpec(
