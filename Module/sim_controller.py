@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from quaternion import quaternion
 import numpy as np
 
 import habitat_sim
 from getch import getch
+
+from Method.direction import getRotation
 
 from Module.sim_loader import SimLoader
 
@@ -15,7 +18,7 @@ class SimController(SimLoader):
             "e": "move_forward",
             "s": "move_left",
             "f": "move_right",
-            "d": "move_back",
+            "d": "move_backward",
             "r": "move_up",
             "w": "move_down",
             "j": "turn_left",
@@ -73,10 +76,28 @@ class SimController(SimLoader):
 
         agent_state = habitat_sim.AgentState()
         agent_state.position = np.array(position)
-        agent_state.rotation = np.array(rotation)
+        if isinstance(rotation, quaternion):
+            agent_state.rotation = rotation
+        else:
+            agent_state.rotation = np.array(rotation)
         self.agent.set_state(agent_state)
 
         self.observations = self.sim.get_sensor_observations()
+        return True
+
+    def setAgentPose(self, position, direction):
+        if position is None or direction is None:
+            print("[ERROR][SimController::setAgentPose]")
+            print("\t input contains None!")
+            return False
+
+        agent_position = [position[0], position[2], position[1]]
+        agent_rotation = getRotation(direction)
+
+        if not self.setAgentState(agent_position, agent_rotation):
+            print("[ERROR][SimController::setAgentPose]")
+            print("\t setAgentState failed!")
+            return False
         return True
 
     def keyBoardControl(self):
@@ -129,7 +150,7 @@ def demo():
     sim_controller.loadGLB(sim_settings)
 
     sim_controller.initAgent()
-    sim_controller.setAgentState([-0.6, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0])
+    sim_controller.setAgentPose([2.7, -3.0, 0.0], [1.0, 1.0, -0.5])
 
     sim_controller.startControl()
     return True
