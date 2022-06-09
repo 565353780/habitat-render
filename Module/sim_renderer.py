@@ -108,7 +108,7 @@ def demo():
     sim_renderer.loadGLB(sim_settings)
 
     sim_renderer.initAgent()
-    sim_renderer.setAgentState([-0.6, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0])
+    sim_renderer.setAgentPose([2.7, -3.0, 0.0], [1.0, 1.0, -0.5])
 
     sim_renderer.keyBoardControlRender()
     return True
