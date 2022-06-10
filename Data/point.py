@@ -19,6 +19,15 @@ class Point(object):
         norm2 = self.x * self.x + self.y * self.y + self.z * self.z
         return sqrt(norm2)
 
+    def normalize(self):
+        norm = self.getNorm()
+        if norm == 0:
+            return False
+        self.x /= norm
+        self.y /= norm
+        self.z /= norm
+        return True
+
     def toList(self):
         point_list = [self.x, self.y, self.z]
         return point_list

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from random import randint
+
 from habitat_sim import AgentState
 
 from Config.input_map import INPUT_KEY_DICT
@@ -10,7 +12,8 @@ from Data.point import Point
 from Data.pose import Pose
 
 from Method.rotations import \
-    getRotationFromRad, getRadFromDirection
+    getDirectionFromRad, getRadFromDirection, \
+    getRotationFromRad, getRotationFromDirection
 
 class PoseController(object):
     def __init__(self):
@@ -67,9 +70,12 @@ def demo():
     move_direction = Point(1.0, 1.0, 3.0)
 
     pose_controller = PoseController()
-    direction_rad = getRadFromDirection(direction)
-    direction_rad.outputInfo(0)
 
+    pose = pose_controller.getPoseByLookAt(position, look_at)
+    pose.outputInfo()
+
+    agent_state = pose_controller.getAgentStateByAgentLookAt(position, look_at)
+    agent_state = pose_controller.getAgentStateFromAgentLookAt(look_at, move_direction)
     return True
 
 if __name__ == "__main__":

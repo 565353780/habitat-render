@@ -4,8 +4,10 @@
 from math import sqrt, atan2, pi
 
 import habitat_sim
-from habitat_sim.utils.common import quat_from_angle_axis
+from habitat_sim.utils.common import \
+    quat_from_angle_axis, quat_rotate_vector
 
+from Data.point import Point
 from Data.rad import Rad
 
 def getRadFromDirection(direction):
@@ -29,7 +31,8 @@ def getRotationFromRad(rad):
 
 def getDirectionFromRad(rad):
     rotation = getRotationFromRad(rad)
-    direction = rotation * [0.0, 0.0, 1.0]
+    direction = quat_rotate_vector(rotation, [0.0, 0.0, -1.0])
+    direction = Point(direction[0], direction[1], direction[2])
     return direction
 
 def getRotationFromDirection(direction):
