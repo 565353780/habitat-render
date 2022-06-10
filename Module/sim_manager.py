@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from getch import getch
+from tqdm import tqdm
+
+from Data.point import Point
+from Data.rad import Rad
+from Data.pose import Pose
 
 from Module.sim_loader import SimLoader
 from Module.action_controller import ActionController
@@ -55,9 +60,7 @@ class SimManager(object):
         self.sim_loader.setAgentState(init_agent_state)
         return True
 
-    def keyBoardActionControl(self):
-        input_key = getch()
-
+    def keyBoardActionControl(self, input_key):
         if input_key == "q":
             return False
 
@@ -70,9 +73,7 @@ class SimManager(object):
         self.sim_loader.stepAction(action)
         return True
 
-    def keyBoardPoseControl(self):
-        input_key = getch()
-
+    def keyBoardPoseControl(self, input_key):
         if input_key == "q":
             return False
 
@@ -84,9 +85,7 @@ class SimManager(object):
         self.sim_loader.setAgentState(agent_state)
         return True
 
-    def keyBoardCircleControl(self):
-        input_key = getch()
-
+    def keyBoardCircleControl(self, input_key):
         if input_key == "q":
             return False
 
@@ -94,11 +93,11 @@ class SimManager(object):
         print("\t To be finished...")
         return True
 
-    def keyBoardControl(self):
-        return self.control_mode_dict[self.control_mode]()
+    def keyBoardControl(self, input_key):
+        return self.control_mode_dict[self.control_mode](input_key)
 
     def startKeyBoardControlRender(self, pause_time):
-        self.resetAgentPose()
+        #  self.resetAgentPose()
         self.sim_renderer.initPlt()
 
         while True:
@@ -110,10 +109,47 @@ class SimManager(object):
             print("agent_state: position", agent_state.position,
                   "rotation", agent_state.rotation)
 
-            if not self.keyBoardControl():
+            input_key = getch()
+            if not self.keyBoardControl(input_key):
                 break
         self.sim_renderer.closePlt()
         return True
+
+def demo_test_speed():
+    glb_file_path = \
+        "/home/chli/habitat/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
+    control_mode = "pose"
+    pause_time = 0.001
+
+    sim_settings = {
+        "width": 256,
+        "height": 256,
+        "scene": glb_file_path,
+        "default_agent": 0,
+        "move_dist": 0.25,
+        "rotate_angle": 10.0,
+        "sensor_height": 0,
+        "color_sensor": True,
+        "depth_sensor": True,
+        "semantic_sensor": True,
+        "seed": 1,
+        "enable_physics": False,
+    }
+
+    sim_manager = SimManager()
+    sim_manager.loadSettings(sim_settings)
+    sim_manager.setControlMode(control_mode)
+
+    sim_manager.pose_controller.pose = Pose(
+        Point(1.7, 1.5, -2.5), Rad(0.2, 0.0))
+    sim_manager.sim_loader.setAgentState(
+        sim_manager.pose_controller.getAgentState())
+
+    input_key_list = sim_manager.pose_controller.input_key_list
+    for i in tqdm(range(1000)):
+        input_key = list(input_key_list)[i % (len(input_key_list) - 2)]
+        sim_manager.keyBoardPoseControl(input_key)
+    return True
 
 def demo():
     glb_file_path = \
@@ -140,9 +176,10 @@ def demo():
     sim_manager.loadSettings(sim_settings)
     sim_manager.setControlMode(control_mode)
 
-    #  sim_manager.setAgentPose([2.7, 1.5, -3.0], [1.0, 0.0, 0.0])
-    #  sim_manager.setAgentLookAt([1.7, 1.5, -2.5], [1.0, 0.5, -5.5])
-    #  sim_manager.setAgentFromLookAt([1.0, 0.5, -5.5], [1.0, 1.0, 3.0])
+    sim_manager.pose_controller.pose = Pose(
+        Point(1.7, 1.5, -2.5), Rad(0.2, 0.0))
+    sim_manager.sim_loader.setAgentState(
+        sim_manager.pose_controller.getAgentState())
 
     sim_manager.startKeyBoardControlRender(pause_time)
     return True
