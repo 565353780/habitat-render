@@ -60,3 +60,18 @@ class PoseController(object):
         position = Point(position_x, position_y, position_z)
         return self.getAgentStateByAgentLookAt(position, look_at)
 
+def demo():
+    position = Point(2.7, 1.5, -3.0)
+    direction = Point(1.0, 0.0, 0.0)
+    look_at = Point(1.0, 0.5, -5.5)
+    move_direction = Point(1.0, 1.0, 3.0)
+
+    pose_controller = PoseController()
+    direction_rad = getRadFromDirection(direction)
+    direction_rad.outputInfo(0)
+
+    return True
+
+if __name__ == "__main__":
+    demo()
+

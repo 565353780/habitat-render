@@ -18,7 +18,7 @@ class Rad(object):
         point_array = np.array(point_list, dtype=np.float32)
         return point_array
 
-    def outputInfo(self, info_level):
+    def outputInfo(self, info_level=0):
         line_start = "\t" * info_level
 
         print(line_start + "[Rad]")
