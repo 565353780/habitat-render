@@ -26,13 +26,6 @@ class SimLoader(object):
         self.sim = None
         return True
 
-    def initAgent(self):
-        self.agent = self.sim.initialize_agent(
-            self.sim_settings["default_agent"])
-        self.action_names = list(self.cfg.agents[
-            self.sim_settings["default_agent"]].action_space.keys())
-        return True
-
     def loadSettings(self, sim_settings):
         self.reset()
 
@@ -43,16 +36,25 @@ class SimLoader(object):
         self.initAgent()
         return True
 
+    def initAgent(self):
+        self.agent = self.sim.initialize_agent(
+            self.sim_settings["default_agent"])
+        self.action_names = list(self.cfg.agents[
+            self.sim_settings["default_agent"]].action_space.keys())
+
+        self.updateObservations()
+        return True
+
+    def updateObservations(self):
+        self.observations = self.sim.get_sensor_observations()
+        return True
+
     def stepAction(self, action):
         if action not in self.action_names:
             print("[ERROR][ActionController::stepAction]")
             print("\t action out of range!")
             return False
         self.observations = self.sim.step(action)
-        return True
-
-    def updateObservations(self):
-        self.observations = self.sim.get_sensor_observations()
         return True
 
     def getSemanticScene(self):

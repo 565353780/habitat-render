@@ -25,7 +25,7 @@ class SimManager(object):
         self.sim_loader.setAgentState(init_agent_state)
         return True
 
-    def keyBoardControl(self):
+    def keyBoardActionControl(self):
         input_key = getch()
 
         if input_key == "q":
@@ -33,7 +33,7 @@ class SimManager(object):
 
         action = self.action_controller.getAction(input_key)
         if action is None:
-            print("[WARN][SimManager::keyBoardControl]")
+            print("[WARN][SimManager::keyBoardActionControl]")
             print("\t input key not valid!")
             return True
 
@@ -48,7 +48,7 @@ class SimManager(object):
 
         return True
 
-    def startKeyBoardControlRender(self, pause_time):
+    def startKeyBoardActionControlRender(self, pause_time):
         self.resetAgentPose()
         self.sim_renderer.initPlt()
 
@@ -61,7 +61,7 @@ class SimManager(object):
             print("agent_state: position", agent_state.position,
                   "rotation", agent_state.rotation)
 
-            if not self.keyBoardControl():
+            if not self.keyBoardActionControl():
                 break
         self.sim_renderer.closePlt()
         return True
@@ -93,7 +93,7 @@ def demo():
     #  sim_manager.setAgentLookAt([1.7, 1.5, -2.5], [1.0, 0.5, -5.5])
     #  sim_manager.setAgentFromLookAt([1.0, 0.5, -5.5], [1.0, 1.0, 3.0])
 
-    sim_manager.startKeyBoardControlRender(pause_time)
+    sim_manager.startKeyBoardActionControlRender(pause_time)
     return True
 
 if __name__ == "__main__":
