@@ -19,6 +19,16 @@ class Point(object):
         norm2 = self.x * self.x + self.y * self.y + self.z * self.z
         return sqrt(norm2)
 
+    def scale(self, scale_mul):
+        scale = Point(self.x * scale_mul,
+                      self.y * scale_mul,
+                      self.z * scale_mul)
+        return scale
+
+    def inverse(self):
+        inverse = Point(-self.x, -self.y, -self.z)
+        return inverse
+
     def normalize(self):
         norm = self.getNorm()
         if norm == 0:
@@ -26,6 +36,12 @@ class Point(object):
         self.x /= norm
         self.y /= norm
         self.z /= norm
+        return True
+
+    def add(self, point):
+        self.x += point.x
+        self.y += point.y
+        self.z += point.z
         return True
 
     def toList(self):

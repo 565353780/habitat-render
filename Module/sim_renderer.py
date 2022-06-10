@@ -10,6 +10,9 @@ class SimRenderer(object):
     def __init__(self):
         return
 
+    def reset(self):
+        return True
+
     def initPlt(self):
         plt.figure(figsize=(24, 8))
         plt.ion()

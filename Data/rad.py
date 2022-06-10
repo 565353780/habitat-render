@@ -9,6 +9,11 @@ class Rad(object):
         self.right_rotate_rad = right_rotate_rad
         return
 
+    def add(self, rad):
+        self.up_rotate_rad += rad.up_rotate_rad
+        self.right_rotate_rad += rad.right_rotate_rad
+        return True
+
     def toList(self):
         point_list = [self.up_rotate_rad, self.right_rotate_rad]
         return point_list
