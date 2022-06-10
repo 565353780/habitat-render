@@ -161,6 +161,14 @@ class SimController(SimLoader):
             return False
         return True
 
+    def circleControl(self):
+        input_key = getch()
+
+        if input_key == "q":
+            return False
+
+        return True
+
     def startKeyBoardControl(self):
         self.resetAgentPose()
 
@@ -196,6 +204,7 @@ def demo():
     sim_controller.initAgent()
     sim_controller.setAgentPose([2.7, 1.5, -3.0], [1.0, 0.0, 0.0])
     sim_controller.setAgentLookAt([1.7, 1.5, -2.5], [1.0, 0.5, -5.5])
+    sim_controller.setAgentFromLookAt([1.0, 0.5, -5.5], [1.0, 1.0, 3.0])
 
     sim_controller.startKeyBoardControl()
     return True

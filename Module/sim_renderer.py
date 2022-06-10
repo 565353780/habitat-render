@@ -108,6 +108,7 @@ def demo():
     sim_renderer.initAgent()
     sim_renderer.setAgentPose([2.7, 1.5, -3.0], [1.0, 0.0, 0.0])
     sim_renderer.setAgentLookAt([1.7, 1.5, -2.5], [1.0, 0.5, -5.5])
+    sim_renderer.setAgentFromLookAt([1.0, 0.5, -5.5], [1.0, 1.0, 3.0])
 
     sim_renderer.startKeyBoardControlRender()
     return True
