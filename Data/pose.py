@@ -18,3 +18,11 @@ class Pose(object):
         self.rad = rad
         return True
 
+    def outputInfo(self, info_level):
+        line_start = "\t" * info_level
+
+        print(line_start + "[Pose]")
+        self.position.outputInfo(info_level + 1)
+        self.rad.outputInfo(info_level + 1)
+        return True
+

@@ -18,3 +18,13 @@ class Rad(object):
         point_array = np.array(point_list, dtype=np.float32)
         return point_array
 
+    def outputInfo(self, info_level):
+        line_start = "\t" * info_level
+
+        print(line_start + "[Rad]")
+        print(line_start + "\t up_rotate_angle = " + \
+              str(np.rad2deg(self.up_rotate_rad)))
+        print(line_start + "\t right_rotate_angle = " + \
+              str(np.rad2deg(self.right_rotate_rad)))
+        return True
+

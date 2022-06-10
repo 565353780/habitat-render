@@ -28,3 +28,13 @@ class Point(object):
         point_array = np.array(point_list, dtype=np.float32)
         return point_array
 
+    def outputInfo(self, info_level):
+        line_start = "\t" * info_level
+
+        print(line_start + "[Point]")
+        print(line_start + "\t [" + \
+              str(self.x) + ", " +\
+              str(self.y) + ", " + \
+              str(self.z) + "]")
+        return True
+

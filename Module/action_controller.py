@@ -24,12 +24,13 @@ class ActionController(object):
         return action
 
 def demo():
-    input_key = "e"
+    input_key_list = INPUT_KEY_DICT.keys()
 
     action_controller = ActionController()
 
-    action = action_controller.getAction(input_key)
-    print(input_key, "->", action)
+    for input_key in input_key_list:
+        action = action_controller.getAction(input_key)
+        print(input_key, "->", action)
     return True
 
 if __name__ == "__main__":
