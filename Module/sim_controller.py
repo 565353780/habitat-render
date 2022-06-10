@@ -91,10 +91,9 @@ class SimController(SimLoader):
             print("\t input contains None!")
             return False
 
-        agent_position = [position[0], position[2], position[1]]
-        agent_rotation = getRotation(direction)
+        rotation = getRotation(direction)
 
-        if not self.setAgentState(agent_position, agent_rotation):
+        if not self.setAgentState(position, rotation):
             print("[ERROR][SimController::setAgentPose]")
             print("\t setAgentState failed!")
             return False
@@ -119,7 +118,7 @@ class SimController(SimLoader):
         return True
 
     def resetAgentPose(self):
-        position = [0.0, 0.0, 0.0]
+        position = [0.0, 1.5, 0.0]
         direction = [1.0, 0.0, 0.0]
 
         if not self.setAgentPose(position, direction):
@@ -180,8 +179,8 @@ def demo():
     sim_controller.loadGLB(sim_settings)
 
     sim_controller.initAgent()
-    sim_controller.setAgentPose([2.7, -3.0, 0.0], [1.0, 1.0, -0.5])
-    sim_controller.setAgentLookAt([2.7, -3.0, 0.0], [1.0, -4.5, 1.0])
+    sim_controller.setAgentPose([2.7, 1.5, -3.0], [1.0, 0.0, 0.0])
+    sim_controller.setAgentLookAt([1.7, 1.5, -2.5], [1.0, 0.5, -5.5])
 
     sim_controller.startKeyBoardControl()
     return True
