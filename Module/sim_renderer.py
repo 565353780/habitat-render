@@ -6,29 +6,31 @@ from PIL import Image
 from matplotlib import pyplot as plt
 from habitat_sim.utils.common import d3_40_colors_rgb
 
-from Module.sim_controller import SimController
-
-class SimRenderer(SimController):
+class SimRenderer(object):
     def __init__(self):
-        super(SimRenderer, self).__init__()
         return
 
-    def renderFrame(self):
-        if self.observations is None:
+    def initPlt(self):
+        plt.figure(figsize=(24, 8))
+        plt.ion()
+        return True
+
+    def renderFrame(self, observations):
+        if observations is None:
             return True
 
-        observations_keys = self.observations.keys()
+        observations_keys = observations.keys()
 
         rgb_obs = None
         depth_obs = None
         semantic_obs = None
 
         if "color_sensor" in observations_keys:
-            rgb_obs = self.observations["color_sensor"]
+            rgb_obs = observations["color_sensor"]
         if "depth_sensor" in observations_keys:
-            depth_obs = self.observations["depth_sensor"]
+            depth_obs = observations["depth_sensor"]
         if "semantic_sensor" in observations_keys:
-            semantic_obs = self.observations["semantic_sensor"]
+            semantic_obs = observations["semantic_sensor"]
 
         if rgb_obs is None and \
                 depth_obs is None and \
@@ -67,52 +69,20 @@ class SimRenderer(SimController):
             plt.imshow(data)
         return True
 
-    def startKeyBoardControlRender(self):
-        #  self.resetAgentPose()
-        plt.figure(figsize=(24, 8))
-        plt.ion()
+    def closePlt(self):
+        plt.ioff()
+        return True
 
-        while True:
-            if not self.renderFrame():
-                break
-            plt.pause(0.001)
-
-            agent_state = self.getAgentState()
-            print("agent_state: position", agent_state.position,
-                  "rotation", agent_state.rotation)
-
-            if not self.keyBoardControl():
-                break
+    def pausePlt(self, pause_time):
+        plt.pause(pause_time)
         return True
 
 def demo():
-    glb_file_path = \
-        "/home/chli/habitat/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
-
-    sim_settings = {
-        "width": 256,
-        "height": 256,
-        "scene": glb_file_path,
-        "default_agent": 0,
-        "move_dist": 0.25,
-        "rotate_angle": 10.0,
-        "sensor_height": 0,
-        "color_sensor": True,
-        "depth_sensor": True,
-        "semantic_sensor": True,
-        "seed": 1,
-        "enable_physics": False,
-    }
-
     sim_renderer = SimRenderer()
-    sim_renderer.loadGLB(sim_settings)
 
-    sim_renderer.initAgent()
-    sim_renderer.setAgentPose([2.7, 1.5, -3.0], [1.0, 0.0, 0.0])
-    sim_renderer.setAgentLookAt([1.7, 1.5, -2.5], [1.0, 0.5, -5.5])
-    sim_renderer.setAgentFromLookAt([1.0, 0.5, -5.5], [1.0, 1.0, 3.0])
-
-    sim_renderer.startKeyBoardControlRender()
+    sim_renderer.initPlt()
+    sim_renderer.pausePlt(0.001)
+    sim_renderer.closePlt()
     return True
 
 if __name__ == "__main__":
