@@ -11,6 +11,9 @@ from habitat_sim.agent import ActuationSpec
 from habitat_sim.utils.common import \
     quat_from_angle_axis, quat_rotate_vector
 
+from habitat_sim.agent.controls.default_controls import \
+    MoveUp, MoveDown, LookUp, LookDown
+
 def getForwardDirection(scene_node):
     forward_ax = (
         np.array(scene_node.absolute_transformation().rotation_scaling())
@@ -149,8 +152,20 @@ def register_actions():
         TurnDown, name="turn_down", body_action=True)
     return True
 
+def register_default_actions():
+    habitat_sim.registry.register_move_fn(
+        MoveUp, name="move_up", body_action=True)
+    habitat_sim.registry.register_move_fn(
+        MoveDown, name="move_down", body_action=True)
+    habitat_sim.registry.register_move_fn(
+        LookUp, name="look_up", body_action=True)
+    habitat_sim.registry.register_move_fn(
+        LookDown, name="look_down", body_action=True)
+    return True
+
 def demo():
-    register_actions()
+    #  register_actions()
+    register_default_actions()
 
     agent_config = habitat_sim.AgentConfiguration()
 
@@ -171,10 +186,10 @@ def demo():
             "turn_left", habitat_sim.agent.ActuationSpec(amount=30.0)),
         "turn_right": habitat_sim.agent.ActionSpec(
             "turn_right", habitat_sim.agent.ActuationSpec(amount=30.0)),
-        "turn_up": habitat_sim.agent.ActionSpec(
-            "turn_up", habitat_sim.agent.ActuationSpec(amount=30.0)),
-        "turn_down": habitat_sim.agent.ActionSpec(
-            "turn_down", habitat_sim.agent.ActuationSpec(amount=30.0)),
+        "look_up": habitat_sim.agent.ActionSpec(
+            "look_up", habitat_sim.agent.ActuationSpec(amount=30.0)),
+        "look_down": habitat_sim.agent.ActionSpec(
+            "look_down", habitat_sim.agent.ActuationSpec(amount=30.0)),
     }
 
     action_space = agent_config.action_space
