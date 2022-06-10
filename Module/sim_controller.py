@@ -7,27 +7,16 @@ import numpy as np
 import habitat_sim
 from getch import getch
 
-from Method.direction import getRotation
+from Data.input_map import INPUT_KEY_DICT
+
+from Method.direction import getRotationFromDirection
 
 from Module.sim_loader import SimLoader
 
 class SimController(SimLoader):
     def __init__(self):
         super(SimController, self).__init__()
-        self.input_key_dict = {
-            "e": "move_forward",
-            "s": "move_left",
-            "f": "move_right",
-            "d": "move_backward",
-            "r": "move_up",
-            "w": "move_down",
-            "j": "turn_left",
-            "l": "turn_right",
-            "i": "look_up",
-            "k": "look_down",
-        }
-        self.move_dist = 1.0
-        self.rotate_angle = 10
+        self.input_key_dict = INPUT_KEY_DICT
         self.input_key_list = self.input_key_dict.keys()
 
         self.agent = None
@@ -96,7 +85,7 @@ class SimController(SimLoader):
             print("\t input contains None!")
             return False
 
-        rotation = getRotation(direction)
+        rotation = getRotationFromDirection(direction)
 
         if not self.setAgentState(position, rotation):
             print("[ERROR][SimController::setAgentPose]")
@@ -190,6 +179,8 @@ def demo():
         "height": 256,
         "scene": glb_file_path,
         "default_agent": 0,
+        "move_dist": 0.25,
+        "rotate_angle": 10.0,
         "sensor_height": 0,
         "color_sensor": True,
         "depth_sensor": True,

@@ -47,6 +47,8 @@ def demo():
         "height": 256,
         "scene": glb_file_path,
         "default_agent": 0,
+        "move_dist": 0.25,
+        "rotate_angle": 10.0,
         "sensor_height": 1.5,
         "color_sensor": True,
         "depth_sensor": True,

@@ -3,7 +3,7 @@
 
 import habitat_sim
 
-from Method.actions import register_default_actions
+from Method.actions import register_actions
 
 def make_cfg(settings):
     sim_cfg = habitat_sim.SimulatorConfiguration()
@@ -37,31 +37,38 @@ def make_cfg(settings):
     semantic_sensor_spec.sensor_subtype = habitat_sim.SensorSubType.PINHOLE
     sensor_specs.append(semantic_sensor_spec)
 
-    register_default_actions()
+    register_actions()
+
+    move_dist = settings["move_dist"]
+    rotate_angle = settings["rotate_angle"]
 
     agent_cfg = habitat_sim.agent.AgentConfiguration()
     agent_cfg.sensor_specifications = sensor_specs
     agent_cfg.action_space = {
         "move_forward": habitat_sim.agent.ActionSpec(
-            "move_forward", habitat_sim.agent.ActuationSpec(amount=0.25)),
+            "move_forward", habitat_sim.agent.ActuationSpec(amount=move_dist)),
         "move_left": habitat_sim.agent.ActionSpec(
-            "move_left", habitat_sim.agent.ActuationSpec(amount=0.25)),
+            "move_left", habitat_sim.agent.ActuationSpec(amount=move_dist)),
         "move_right": habitat_sim.agent.ActionSpec(
-            "move_right", habitat_sim.agent.ActuationSpec(amount=0.25)),
+            "move_right", habitat_sim.agent.ActuationSpec(amount=move_dist)),
         "move_backward": habitat_sim.agent.ActionSpec(
-            "move_backward", habitat_sim.agent.ActuationSpec(amount=0.25)),
+            "move_backward", habitat_sim.agent.ActuationSpec(amount=move_dist)),
         "move_up": habitat_sim.agent.ActionSpec(
-            "move_up", habitat_sim.agent.ActuationSpec(amount=0.25)),
+            "my_move_up", habitat_sim.agent.ActuationSpec(amount=move_dist)),
         "move_down": habitat_sim.agent.ActionSpec(
-            "move_down", habitat_sim.agent.ActuationSpec(amount=0.25)),
+            "my_move_down", habitat_sim.agent.ActuationSpec(amount=move_dist)),
         "turn_left": habitat_sim.agent.ActionSpec(
-            "turn_left", habitat_sim.agent.ActuationSpec(amount=30.0)),
+            "my_turn_left", habitat_sim.agent.ActuationSpec(amount=rotate_angle)),
         "turn_right": habitat_sim.agent.ActionSpec(
-            "turn_right", habitat_sim.agent.ActuationSpec(amount=30.0)),
-        "look_up": habitat_sim.agent.ActionSpec(
-            "look_up", habitat_sim.agent.ActuationSpec(amount=30.0)),
-        "look_down": habitat_sim.agent.ActionSpec(
-            "look_down", habitat_sim.agent.ActuationSpec(amount=30.0)),
+            "my_turn_right", habitat_sim.agent.ActuationSpec(amount=rotate_angle)),
+        "turn_up": habitat_sim.agent.ActionSpec(
+            "turn_up", habitat_sim.agent.ActuationSpec(amount=rotate_angle)),
+        "turn_down": habitat_sim.agent.ActionSpec(
+            "turn_down", habitat_sim.agent.ActuationSpec(amount=rotate_angle)),
+        "head_left": habitat_sim.agent.ActionSpec(
+            "my_head_left", habitat_sim.agent.ActuationSpec(amount=rotate_angle)),
+        "head_right": habitat_sim.agent.ActionSpec(
+            "my_head_right", habitat_sim.agent.ActuationSpec(amount=rotate_angle)),
     }
     return habitat_sim.Configuration(sim_cfg, [agent_cfg])
 
