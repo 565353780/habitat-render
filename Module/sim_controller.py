@@ -86,6 +86,11 @@ class SimController(SimLoader):
         return True
 
     def setAgentPose(self, position, direction):
+        '''
+        Input:
+            position: [x, y, z] -> ZXY world
+            direction: [x, y, z] -> ZXY world
+        '''
         if position is None or direction is None:
             print("[ERROR][SimController::setAgentPose]")
             print("\t input contains None!")
@@ -100,6 +105,11 @@ class SimController(SimLoader):
         return True
 
     def setAgentLookAt(self, position, look_at):
+        '''
+        Input:
+            position: [x, y, z] -> ZXY world
+            look_at: [x, y, z] -> ZXY world
+        '''
         direction = [look_at[i] - position[i] for i in range(3)]
 
         if not self.setAgentPose(position, direction):
@@ -109,6 +119,11 @@ class SimController(SimLoader):
         return True
 
     def setAgentFromLookAt(self, look_at, move_direction):
+        '''
+        Input:
+            look_at: [x, y, z] -> ZXY world
+            move_direction: [x, y, z] -> ZXY world
+        '''
         position = [look_at[i] + move_direction[i] for i in range(3)]
 
         if not self.setAgentLookAt(position, look_at):
