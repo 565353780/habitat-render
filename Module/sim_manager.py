@@ -119,7 +119,6 @@ def demo_test_speed():
     glb_file_path = \
         "/home/chli/habitat/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
     control_mode = "pose"
-    pause_time = 0.001
 
     sim_settings = {
         "width": 256,

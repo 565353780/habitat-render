@@ -47,6 +47,7 @@ class SimRenderer(object):
 
         if rgb_obs is not None:
             arr.append(rgb_obs)
+            rgb_obs = rgb_obs[..., 0:3]
             titles.append('rgb')
 
         if depth_obs is not None:
