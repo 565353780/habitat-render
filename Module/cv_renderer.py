@@ -61,9 +61,6 @@ class CVRenderer(object):
             semantic_img = semantic_img[..., 0:3][...,::-1] / 255.0
             arr.append(semantic_img)
 
-        for obs in arr:
-            print(obs[0][0])
-
         image = np.hstack(arr)
         cv2.imshow("CVRenderer", image)
         return True
