@@ -42,7 +42,7 @@ class CVRenderer(object):
         arr = []
 
         if rgb_obs is not None:
-            rgb_obs = rgb_obs[..., 0:3][::-1]
+            rgb_obs = rgb_obs[..., 0:3][...,::-1] / 255.0
             arr.append(rgb_obs)
 
         if depth_obs is not None:
@@ -60,6 +60,9 @@ class CVRenderer(object):
             semantic_img = np.array(semantic_img)
             semantic_img = semantic_img[..., 0:3][::-1]
             arr.append(semantic_img)
+
+        for obs in arr:
+            print(obs[0][0])
 
         image = np.hstack(arr)
         cv2.imshow("CVRenderer", image)
