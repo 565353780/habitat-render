@@ -4,14 +4,20 @@
 import numpy as np
 
 class Rad(object):
-    def __init__(self, up_rotate_rad=0.0, right_rotate_rad=0.0):
+    def __init__(self,
+                 up_rotate_rad=0.0,
+                 right_rotate_rad=0.0,
+                 front_rotate_rad=0.0
+                 ):
         self.up_rotate_rad = up_rotate_rad
         self.right_rotate_rad = right_rotate_rad
+        self.front_rotate_rad = front_rotate_rad
         return
 
     def add(self, rad):
         self.up_rotate_rad += rad.up_rotate_rad
         self.right_rotate_rad += rad.right_rotate_rad
+        self.front_rotate_rad += rad.front_rotate_rad
         return True
 
     def toList(self):
@@ -31,5 +37,7 @@ class Rad(object):
               str(np.rad2deg(self.up_rotate_rad)))
         print(line_start + "\t right_rotate_angle = " + \
               str(np.rad2deg(self.right_rotate_rad)))
+        print(line_start + "\t front_rotate_angle = " + \
+              str(np.rad2deg(self.front_rotate_rad)))
         return True
 
