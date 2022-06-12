@@ -1,92 +1,69 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import numpy as np
-from PIL import Image
-from matplotlib import pyplot as plt
-from habitat_sim.utils.common import d3_40_colors_rgb
+from Module.plt_renderer import PltRenderer
+from Module.cv_renderer import CVRenderer
 
 class SimRenderer(object):
     def __init__(self):
+        self.plt_renderer = PltRenderer()
+        self.cv_renderer = CVRenderer()
+        self.render_mode_list = ["plt", "cv"]
+        self.init_func_dict = {
+            "plt": self.plt_renderer.initPlt,
+            "cv": self.cv_renderer.initCV,
+        }
+        self.render_func_dict = {
+            "plt": self.plt_renderer.renderFrame,
+            "cv": self.cv_renderer.renderFrame,
+        }
+        self.close_func_dict = {
+            "plt": self.plt_renderer.closePlt,
+            "cv": self.cv_renderer.closeCV,
+        }
+        self.wait_func_dict = {
+            "plt": self.plt_renderer.pausePlt,
+            "cv": self.cv_renderer.waitKey,
+        }
+
+        self.render_mode = None
         return
 
     def reset(self):
+        self.plt_renderer.reset()
+        self.cv_renderer.reset()
         return True
 
-    def initPlt(self):
-        plt.figure(figsize=(24, 8))
-        plt.ion()
+    def setRenderMode(self, render_mode):
+        if render_mode not in self.render_mode_list:
+            print("[ERROR][SimRenderer::setRenderMode]")
+            print("\t render_mode not valid!")
+            return False
+
+        self.render_mode = render_mode
         return True
 
-    def renderFrame(self, observations):
-        if observations is None:
-            return True
+    def init(self):
+        return self.init_func_dict[self.render_mode]()
 
-        observations_keys = observations.keys()
+    def renderFrame(self, observasions):
+        return self.render_func_dict[self.render_mode](observasions)
 
-        rgb_obs = None
-        depth_obs = None
-        semantic_obs = None
+    def close(self):
+        return self.close_func_dict[self.render_mode]()
 
-        if "color_sensor" in observations_keys:
-            rgb_obs = observations["color_sensor"]
-        if "depth_sensor" in observations_keys:
-            depth_obs = observations["depth_sensor"]
-        if "semantic_sensor" in observations_keys:
-            semantic_obs = observations["semantic_sensor"]
-
-        if rgb_obs is None and \
-                depth_obs is None and \
-                semantic_obs is None:
-            return True
-
-        plt.cla()
-
-        arr = []
-        titles = []
-
-        if rgb_obs is not None:
-            arr.append(rgb_obs)
-            rgb_obs = rgb_obs[..., 0:3]
-            titles.append('rgb')
-
-        if depth_obs is not None:
-            #  depth_img = np.clip(depth_obs, 0, 10) / 10.0
-            arr.append(depth_obs)
-            titles.append('depth')
-
-        if semantic_obs is not None:
-
-            #  semantic_img = Image.new("P",
-                #  (semantic_obs.shape[1], semantic_obs.shape[0]))
-            #  semantic_img.putpalette(d3_40_colors_rgb.flatten())
-            #  semantic_img.putdata((semantic_obs.flatten() % 40).astype(np.uint8))
-            #  semantic_img = semantic_img.convert("RGBA")
-
-            arr.append(semantic_obs)
-            titles.append('semantic')
-
-        for i, data in enumerate(arr):
-            ax = plt.subplot(1, 3, i+1)
-            ax.axis('off')
-            ax.set_title(titles[i])
-            plt.imshow(data)
-        return True
-
-    def closePlt(self):
-        plt.ioff()
-        return True
-
-    def pausePlt(self, pause_time):
-        plt.pause(pause_time)
-        return True
+    def wait(self, wait_val):
+        return self.wait_func_dict[self.render_mode](wait_val)
 
 def demo():
+    render_mode = "cv"
+
     sim_renderer = SimRenderer()
 
-    sim_renderer.initPlt()
-    sim_renderer.pausePlt(0.001)
-    sim_renderer.closePlt()
+    sim_renderer.setRenderMode(render_mode)
+    sim_renderer.init()
+    sim_renderer.wait(0.001)
+    sim_renderer.close()
     return True
 
 if __name__ == "__main__":

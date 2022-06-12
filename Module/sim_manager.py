@@ -55,6 +55,9 @@ class SimManager(object):
         self.control_mode = control_mode
         return True
 
+    def setRenderMode(self, render_mode):
+        return self.sim_renderer.setRenderMode(render_mode)
+
     def resetAgentPose(self):
         init_agent_state = self.pose_controller.getInitAgentState()
         self.sim_loader.setAgentState(init_agent_state)
@@ -96,14 +99,14 @@ class SimManager(object):
     def keyBoardControl(self, input_key):
         return self.control_mode_dict[self.control_mode](input_key)
 
-    def startKeyBoardControlRender(self, pause_time):
+    def startKeyBoardControlRender(self, wait_val):
         #  self.resetAgentPose()
-        self.sim_renderer.initPlt()
+        self.sim_renderer.init()
 
         while True:
             if not self.sim_renderer.renderFrame(self.sim_loader.observations):
                 break
-            self.sim_renderer.pausePlt(pause_time)
+            self.sim_renderer.wait(wait_val)
 
             agent_state = self.sim_loader.getAgentState()
             print("agent_state: position", agent_state.position,
@@ -112,7 +115,7 @@ class SimManager(object):
             input_key = getch()
             if not self.keyBoardControl(input_key):
                 break
-        self.sim_renderer.closePlt()
+        self.sim_renderer.close()
         return True
 
 def demo_test_speed():
@@ -154,7 +157,8 @@ def demo():
     glb_file_path = \
         "/home/chli/habitat/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
     control_mode = "pose"
-    pause_time = 0.001
+    render_mode = "cv"
+    wait_val = 1
 
     sim_settings = {
         "width": 256,
@@ -174,13 +178,14 @@ def demo():
     sim_manager = SimManager()
     sim_manager.loadSettings(sim_settings)
     sim_manager.setControlMode(control_mode)
+    sim_manager.setRenderMode(render_mode)
 
     sim_manager.pose_controller.pose = Pose(
         Point(1.7, 1.5, -2.5), Rad(0.2, 0.0))
     sim_manager.sim_loader.setAgentState(
         sim_manager.pose_controller.getAgentState())
 
-    sim_manager.startKeyBoardControlRender(pause_time)
+    sim_manager.startKeyBoardControlRender(wait_val)
     return True
 
 if __name__ == "__main__":
