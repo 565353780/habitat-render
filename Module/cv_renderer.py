@@ -42,13 +42,13 @@ class CVRenderer(object):
         arr = []
 
         if rgb_obs is not None:
-            rgb_obs = rgb_obs[..., 0:3][...,::-1] / 255.0
-            arr.append(rgb_obs)
+            rgb_img = rgb_obs[..., 0:3][...,::-1] / 255.0
+            arr.append(rgb_img)
 
         if depth_obs is not None:
-            #  depth_img = np.clip(depth_obs, 0, 10) / 10.0
-            depth_obs = cv2.cvtColor(depth_obs, cv2.COLOR_GRAY2BGR)
-            arr.append(depth_obs)
+            depth_img = np.clip(depth_obs, 0, 10) / 10.0
+            depth_img = cv2.cvtColor(depth_img, cv2.COLOR_GRAY2BGR)
+            arr.append(depth_img)
 
         if semantic_obs is not None:
             semantic_img = Image.new("P",
@@ -58,7 +58,7 @@ class CVRenderer(object):
             semantic_img = semantic_img.convert("RGBA")
 
             semantic_img = np.array(semantic_img)
-            semantic_img = semantic_img[..., 0:3][::-1]
+            semantic_img = semantic_img[..., 0:3][...,::-1] / 255.0
             arr.append(semantic_img)
 
         for obs in arr:
