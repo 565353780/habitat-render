@@ -7,11 +7,10 @@ from Data.point import Point
 from Data.rad import Rad
 
 class Pose(object):
-    def __init__(self, position=Point(), rad=Rad()):
+    def __init__(self, position=Point(), rad=Rad(), scale=[1.0, 1.0, 1.0]):
         self.position = position
         self.rad = rad
-
-        self.scale = np.array([1.0, 1.0, 1.0])
+        self.scale = np.array(scale)
         return
 
     def setPosition(self, position):
