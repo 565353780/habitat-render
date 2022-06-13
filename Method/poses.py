@@ -68,23 +68,33 @@ def getMoveDownPose(pose, move_dist):
     move_direction = getDownDirection()
     return getMovePose(pose, move_direction, move_dist)
 
-def getRotatePose(pose, up_rotate_angle, right_rotate_angle):
+def getRotatePose(pose,
+                  up_rotate_angle,
+                  right_rotate_angle,
+                  front_rotate_angle):
     new_pose = pose
     rotate_rad = Rad(
         np.deg2rad(up_rotate_angle),
-        np.deg2rad(right_rotate_angle))
+        np.deg2rad(right_rotate_angle),
+        np.deg2rad(front_rotate_angle))
     new_pose.rad.add(rotate_rad)
     return new_pose
 
 def getTurnLeftPose(pose, rotate_angle):
-    return getRotatePose(pose, rotate_angle, 0.0)
+    return getRotatePose(pose, rotate_angle, 0.0, 0.0)
 
 def getTurnRightPose(pose, rotate_angle):
-    return getRotatePose(pose, -rotate_angle, 0.0)
+    return getRotatePose(pose, -rotate_angle, 0.0, 0.0)
 
 def getTurnUpPose(pose, rotate_angle):
-    return getRotatePose(pose, 0.0, rotate_angle)
+    return getRotatePose(pose, 0.0, rotate_angle, 0.0)
 
 def getTurnDownPose(pose, rotate_angle):
-    return getRotatePose(pose, 0.0, -rotate_angle)
+    return getRotatePose(pose, 0.0, -rotate_angle, 0.0)
+
+def getHeadLeftPose(pose, rotate_angle):
+    return getRotatePose(pose, 0.0, 0.0, -rotate_angle)
+
+def getHeadRightPose(pose, rotate_angle):
+    return getRotatePose(pose, 0.0, 0.0, rotate_angle)
 

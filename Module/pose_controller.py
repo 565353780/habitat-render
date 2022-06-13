@@ -18,7 +18,8 @@ from Method.poses import \
     getMoveRightPose, getMoveBackwardPose, \
     getMoveUpPose, getMoveDownPose, \
     getTurnLeftPose, getTurnRightPose, \
-    getTurnUpPose, getTurnDownPose
+    getTurnUpPose, getTurnDownPose, \
+    getHeadLeftPose, getHeadRightPose
 
 class PoseController(object):
     def __init__(self):
@@ -37,6 +38,8 @@ class PoseController(object):
             "turn_right": self.turnRight,
             "turn_up": self.turnUp,
             "turn_down": self.turnDown,
+            "head_left": self.headLeft,
+            "head_right": self.headRight,
         }
         self.move_func_list = self.move_func_dict.keys()
         self.rotate_func_list = self.rotate_func_dict.keys()
@@ -139,6 +142,14 @@ class PoseController(object):
         self.pose = getTurnDownPose(self.pose, rotate_angle)
         return True
 
+    def headLeft(self, rotate_angle):
+        self.pose = getHeadLeftPose(self.pose, rotate_angle)
+        return True
+
+    def headRight(self, rotate_angle):
+        self.pose = getHeadRightPose(self.pose, rotate_angle)
+        return True
+
     def getAgentStateByKey(self,
                            input_key,
                            move_dist=0.0,
@@ -155,40 +166,6 @@ class PoseController(object):
         if action in self.rotate_func_list:
             self.rotate_func_dict[action](rotate_angle)
             return self.getAgentState()
-
-        #  if action == "move_forward":
-            #  self.moveForward(move_dist)
-            #  return self.getAgentState()
-        #  if action == "move_left":
-            #  self.moveLeft(move_dist)
-            #  return self.getAgentState()
-        #  if action == "move_right":
-            #  self.moveRight(move_dist)
-            #  return self.getAgentState()
-        #  if action == "move_backward":
-            #  self.moveBackward(move_dist)
-            #  return self.getAgentState()
-        #  if action == "move_up":
-            #  self.moveUp(move_dist)
-            #  return self.getAgentState()
-        #  if action == "move_down":
-            #  self.moveDown(move_dist)
-            #  return self.getAgentState()
-        #  if action == "turn_left":
-            #  self.turnLeft(move_dist)
-            #  return self.getAgentState()
-        #  if action == "turn_right":
-            #  self.turnRight(move_dist)
-            #  return self.getAgentState()
-        #  if action == "turn_right":
-            #  self.turnRight(move_dist)
-            #  return self.getAgentState()
-        #  if action == "turn_up":
-            #  self.turnUp(move_dist)
-            #  return self.getAgentState()
-        #  if action == "turn_down":
-            #  self.turnDown(move_dist)
-            #  return self.getAgentState()
 
         print("[WARN][PoseController::getAgentStateByKey]")
         print("\t action not valid!")
