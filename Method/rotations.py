@@ -21,12 +21,13 @@ def getRadFromDirection(direction):
     return rad
 
 def getRotationFromRad(rad):
-    up_rotate_rad, right_rotate_rad = rad.toList()
+    up_rotate_rad, right_rotate_rad, front_rotate_rad = rad.toList()
 
     up_rotation = quat_from_angle_axis(up_rotate_rad, habitat_sim.geo.UP)
     right_rotation = quat_from_angle_axis(right_rotate_rad, habitat_sim.geo.RIGHT)
+    front_rotation = quat_from_angle_axis(front_rotate_rad, habitat_sim.geo.FRONT)
 
-    rotation = up_rotation * right_rotation
+    rotation = up_rotation * right_rotation * front_rotation
     return rotation
 
 def getDirectionFromRad(rad):

@@ -21,8 +21,8 @@ class Rad(object):
         return True
 
     def toList(self):
-        point_list = [self.up_rotate_rad, self.right_rotate_rad]
-        return point_list
+        rad_list = [self.up_rotate_rad, self.right_rotate_rad, self.front_rotate_rad]
+        return rad_list
 
     def toArray(self):
         point_list = self.toList()

@@ -8,6 +8,8 @@ class Pose(object):
     def __init__(self, position=Point(), rad=Rad()):
         self.position = position
         self.rad = rad
+
+        self.scale = [1.0, 1.0, 1.0]
         return
 
     def setPosition(self, position):
