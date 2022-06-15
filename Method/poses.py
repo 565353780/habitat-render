@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from math import pi
+from copy import deepcopy
+from math import pi, sqrt
 import numpy as np
 
 from Data.rad import Rad
 
 from Method.rotations import getDirectionFromRad
+
+def getLength(point):
+    x_2 = point.x * point.x
+    y_2 = point.y * point.y
+    z_2 = point.z * point.z
+    return sqrt(x_2 + y_2 + z_2)
 
 def getForwardDirection(pose):
     forward_rad = Rad(pose.rad.up_rotate_rad, 0.0)
@@ -38,9 +45,18 @@ def getDownDirection():
     down_direction = getDirectionFromRad(down_rad)
     return down_direction
 
-def getMovePose(pose, move_direction, move_dist):
-    new_pose = pose
-    move_point = move_direction.scale(move_dist)
+def getMovePose(pose, move_direction, move_dist=None):
+    new_pose = deepcopy(pose)
+
+    move_direction_length = getLength(move_direction)
+    if move_direction_length == 0:
+        return new_pose
+
+    if move_dist is None:
+        new_pose.position.add(move_direction)
+        return new_pose
+
+    move_point = move_direction.scale(move_dist / move_direction_length)
     new_pose.position.add(move_point)
     return new_pose
 
@@ -72,7 +88,8 @@ def getRotatePose(pose,
                   up_rotate_angle,
                   right_rotate_angle,
                   front_rotate_angle):
-    new_pose = pose
+    new_pose = deepcopy(pose)
+
     rotate_rad = Rad(
         np.deg2rad(up_rotate_angle),
         np.deg2rad(right_rotate_angle),
