@@ -3,9 +3,9 @@
 
 import habitat_sim
 
-from Config.config import make_cfg
-
 from Method.infos import print_scene_recur
+from Method.actions import register_actions
+from Method.configs import makeGLBConfig
 
 class SimLoader(object):
     def __init__(self):
@@ -15,6 +15,8 @@ class SimLoader(object):
         self.sim = None
         self.action_names = None
         self.observations = None
+
+        register_actions()
         return
 
     def reset(self):
@@ -26,11 +28,10 @@ class SimLoader(object):
         self.sim = None
         return True
 
-    def loadSettings(self, sim_settings):
+    def loadSettings(self, glb_file_path):
         self.reset()
 
-        self.sim_settings = sim_settings
-        self.cfg = make_cfg(sim_settings)
+        self.cfg = makeGLBConfig(glb_file_path)
         self.sim = habitat_sim.Simulator(self.cfg)
 
         self.initAgent()
