@@ -235,6 +235,3 @@ def demo():
         print(action_space[action_name])
     return True
 
-if __name__ == "__main__":
-    demo()
-

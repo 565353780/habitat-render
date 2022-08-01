@@ -81,6 +81,3 @@ def demo():
     cv_renderer.closeCV()
     return True
 
-if __name__ == "__main__":
-    demo()
-

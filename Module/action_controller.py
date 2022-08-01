@@ -33,6 +33,3 @@ def demo():
         print(input_key, "->", action)
     return True
 
-if __name__ == "__main__":
-    demo()
-
