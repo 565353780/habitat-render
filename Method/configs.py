@@ -6,6 +6,9 @@ import habitat_sim
 
 from Config.config import SIM_SETTING
 
+from Method.actions import register_actions
+register_actions()
+
 def make_cfg(settings):
     sim_cfg = habitat_sim.SimulatorConfiguration()
     sim_cfg.gpu_device_id = 0
