@@ -7,7 +7,6 @@ from Config.config import SIM_SETTING
 
 from Method.infos import print_scene_recur
 from Method.configs import makeGLBConfig
-from Method.actions import register_actions
 
 class SimLoader(object):
     def __init__(self):
@@ -15,8 +14,6 @@ class SimLoader(object):
         self.sim = None
         self.action_names = None
         self.observations = None
-
-        register_actions()
         return
 
     def reset(self):
