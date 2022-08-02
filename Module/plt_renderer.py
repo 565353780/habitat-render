@@ -13,7 +13,7 @@ class PltRenderer(object):
     def reset(self):
         return True
 
-    def initPlt(self):
+    def init(self):
         plt.figure(figsize=(24, 8))
         plt.ion()
         return True
@@ -57,11 +57,11 @@ class PltRenderer(object):
 
         if semantic_obs is not None:
 
-            #  semantic_img = Image.new("P",
-                #  (semantic_obs.shape[1], semantic_obs.shape[0]))
-            #  semantic_img.putpalette(d3_40_colors_rgb.flatten())
-            #  semantic_img.putdata((semantic_obs.flatten() % 40).astype(np.uint8))
-            #  semantic_img = semantic_img.convert("RGBA")
+            semantic_img = Image.new("P",
+                (semantic_obs.shape[1], semantic_obs.shape[0]))
+            semantic_img.putpalette(d3_40_colors_rgb.flatten())
+            semantic_img.putdata((semantic_obs.flatten() % 40).astype(np.uint8))
+            semantic_img = semantic_img.convert("RGBA")
 
             arr.append(semantic_obs)
             titles.append('semantic')
@@ -73,22 +73,19 @@ class PltRenderer(object):
             plt.imshow(data)
         return True
 
-    def closePlt(self):
+    def close(self):
         plt.ioff()
         return True
 
-    def pausePlt(self, pause_time):
+    def waitKey(self, pause_time):
         plt.pause(pause_time)
         return True
 
 def demo():
     plt_renderer = PltRenderer()
 
-    plt_renderer.initPlt()
-    plt_renderer.pausePlt(0.001)
-    plt_renderer.closePlt()
+    plt_renderer.init()
+    plt_renderer.waitKey(0.001)
+    plt_renderer.close()
     return True
-
-if __name__ == "__main__":
-    demo()
 

@@ -13,8 +13,8 @@ class CVRenderer(object):
     def reset(self):
         return True
 
-    def initCV(self):
-        cv2.namedWindow("CVRenderer",cv2.WINDOW_AUTOSIZE)
+    def init(self, window_name="CVRenderer"):
+        cv2.namedWindow(window_name,cv2.WINDOW_AUTOSIZE)
         return True
 
     def renderFrame(self, observations):
@@ -65,7 +65,7 @@ class CVRenderer(object):
         cv2.imshow("CVRenderer", image)
         return True
 
-    def closeCV(self):
+    def close(self):
         cv2.destroyAllWindows()
         return True
 
@@ -76,8 +76,8 @@ class CVRenderer(object):
 def demo():
     cv_renderer = CVRenderer()
 
-    cv_renderer.initCV()
+    cv_renderer.init()
     cv_renderer.waitKey(1)
-    cv_renderer.closeCV()
+    cv_renderer.close()
     return True
 
