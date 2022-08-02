@@ -195,6 +195,3 @@ def demo():
         agent_state = pose_controller.getAgentStateByKey(input_key)
     return True
 
-if __name__ == "__main__":
-    demo()
-
