@@ -140,7 +140,7 @@ def demo_test_speed():
 def demo():
     glb_file_path = \
         "/home/chli/scan2cad/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
-    control_mode = "action"
+    control_mode = "pose"
     wait_key = 1
 
     sim_manager = SimManager()
