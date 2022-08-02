@@ -4,6 +4,8 @@
 from getch import getch
 from tqdm import tqdm
 
+from Config.config import SIM_SETTING
+
 from Data.point import Point
 from Data.rad import Rad
 from Data.pose import Pose
@@ -11,14 +13,14 @@ from Data.pose import Pose
 from Module.sim_loader import SimLoader
 from Module.action_controller import ActionController
 from Module.pose_controller import PoseController
-from Module.sim_renderer import SimRenderer
+from Module.cv_renderer import CVRenderer
 
 class SimManager(object):
     def __init__(self):
         self.sim_loader = SimLoader()
         self.action_controller = ActionController()
         self.pose_controller = PoseController()
-        self.sim_renderer = SimRenderer()
+        self.cv_renderer = CVRenderer()
         self.control_mode_dict = {
             "action": self.keyBoardActionControl,
             "pose": self.keyBoardPoseControl,
@@ -33,7 +35,7 @@ class SimManager(object):
         self.sim_loader.reset()
         self.action_controller.reset()
         self.pose_controller.reset()
-        self.sim_renderer.reset()
+        self.cv_renderer.reset()
         self.control_mode_dict = {
             "action": self.keyBoardActionControl,
             "pose": self.keyBoardPoseControl,
@@ -43,8 +45,8 @@ class SimManager(object):
         self.control_mode = "pose"
         return
 
-    def loadSettings(self, sim_settings):
-        self.sim_loader.loadSettings(sim_settings)
+    def loadSettings(self, glb_file_path):
+        self.sim_loader.loadSettings(glb_file_path)
         return True
 
     def setControlMode(self, control_mode):
@@ -54,9 +56,6 @@ class SimManager(object):
             return True
         self.control_mode = control_mode
         return True
-
-    def setRenderMode(self, render_mode):
-        return self.sim_renderer.setRenderMode(render_mode)
 
     def resetAgentPose(self):
         init_agent_state = self.pose_controller.getInitAgentState()
@@ -82,8 +81,8 @@ class SimManager(object):
 
         agent_state = self.pose_controller.getAgentStateByKey(
             input_key,
-            self.sim_loader.sim_settings["move_dist"],
-            self.sim_loader.sim_settings["rotate_angle"])
+            SIM_SETTING["move_dist"],
+            SIM_SETTING["rotate_angle"])
 
         self.sim_loader.setAgentState(agent_state)
         return True
@@ -99,14 +98,14 @@ class SimManager(object):
     def keyBoardControl(self, input_key):
         return self.control_mode_dict[self.control_mode](input_key)
 
-    def startKeyBoardControlRender(self, wait_val):
+    def startKeyBoardControlRender(self, wait_key):
         #  self.resetAgentPose()
-        self.sim_renderer.init()
+        self.cv_renderer.init()
 
         while True:
-            if not self.sim_renderer.renderFrame(self.sim_loader.observations):
+            if not self.cv_renderer.renderFrame(self.sim_loader.observations):
                 break
-            self.sim_renderer.wait(wait_val)
+            self.cv_renderer.waitKey(wait_key)
 
             agent_state = self.sim_loader.getAgentState()
             print("agent_state: position", agent_state.position,
@@ -115,31 +114,16 @@ class SimManager(object):
             input_key = getch()
             if not self.keyBoardControl(input_key):
                 break
-        self.sim_renderer.close()
+        self.cv_renderer.close()
         return True
 
 def demo_test_speed():
     glb_file_path = \
-        "/home/chli/habitat/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
+        "/home/chli/scan2cad/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
     control_mode = "pose"
 
-    sim_settings = {
-        "width": 256,
-        "height": 256,
-        "scene": glb_file_path,
-        "default_agent": 0,
-        "move_dist": 0.25,
-        "rotate_angle": 10.0,
-        "sensor_height": 0,
-        "color_sensor": True,
-        "depth_sensor": True,
-        "semantic_sensor": True,
-        "seed": 1,
-        "enable_physics": False,
-    }
-
     sim_manager = SimManager()
-    sim_manager.loadSettings(sim_settings)
+    sim_manager.loadSettings(glb_file_path)
     sim_manager.setControlMode(control_mode)
 
     sim_manager.pose_controller.pose = Pose(
@@ -155,39 +139,19 @@ def demo_test_speed():
 
 def demo():
     glb_file_path = \
-        "/home/chli/habitat/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
-    control_mode = "pose"
-    render_mode = "cv"
-    wait_val = 1
-
-    sim_settings = {
-        "width": 256,
-        "height": 256,
-        "scene": glb_file_path,
-        "default_agent": 0,
-        "move_dist": 0.25,
-        "rotate_angle": 10.0,
-        "sensor_height": 0,
-        "color_sensor": True,
-        "depth_sensor": True,
-        "semantic_sensor": True,
-        "seed": 1,
-        "enable_physics": False,
-    }
+        "/home/chli/scan2cad/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
+    control_mode = "action"
+    wait_key = 1
 
     sim_manager = SimManager()
-    sim_manager.loadSettings(sim_settings)
+    sim_manager.loadSettings(glb_file_path)
     sim_manager.setControlMode(control_mode)
-    sim_manager.setRenderMode(render_mode)
 
     sim_manager.pose_controller.pose = Pose(
-        Point(1.7, 1.5, -2.5), Rad(0.2, 0.0))
+        Point(2.2, -0.25, -2.1), Rad(0.2, 0.0))
     sim_manager.sim_loader.setAgentState(
         sim_manager.pose_controller.getAgentState())
 
-    sim_manager.startKeyBoardControlRender(wait_val)
+    sim_manager.startKeyBoardControlRender(wait_key)
     return True
-
-if __name__ == "__main__":
-    demo()
 
