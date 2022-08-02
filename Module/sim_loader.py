@@ -3,14 +3,14 @@
 
 import habitat_sim
 
+from Config.config import SIM_SETTING
+
 from Method.infos import print_scene_recur
-from Method.actions import register_actions
 from Method.configs import makeGLBConfig
+from Method.actions import register_actions
 
 class SimLoader(object):
     def __init__(self):
-        self.sim_settings = None
-
         self.cfg = None
         self.sim = None
         self.action_names = None
@@ -20,8 +20,6 @@ class SimLoader(object):
         return
 
     def reset(self):
-        self.sim_settings = None
-
         self.cfg = None
         if self.sim is not None:
             self.sim.close()
@@ -39,9 +37,9 @@ class SimLoader(object):
 
     def initAgent(self):
         self.agent = self.sim.initialize_agent(
-            self.sim_settings["default_agent"])
+            SIM_SETTING["default_agent"])
         self.action_names = list(self.cfg.agents[
-            self.sim_settings["default_agent"]].action_space.keys())
+            SIM_SETTING["default_agent"]].action_space.keys())
 
         self.updateObservations()
         return True
@@ -76,29 +74,11 @@ class SimLoader(object):
 
 def demo():
     glb_file_path = \
-        "/home/chli/habitat/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
-
-    sim_settings = {
-        "width": 256,
-        "height": 256,
-        "scene": glb_file_path,
-        "default_agent": 0,
-        "move_dist": 0.25,
-        "rotate_angle": 10.0,
-        "sensor_height": 1.5,
-        "color_sensor": True,
-        "depth_sensor": True,
-        "semantic_sensor": True,
-        "seed": 1,
-        "enable_physics": False,
-    }
+        "/home/chli/scan2cad/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
 
     sim_loader = SimLoader()
-    sim_loader.loadSettings(sim_settings)
+    sim_loader.loadSettings(glb_file_path)
     print("[INFO][sim_loader::demo]")
     print("\t load scene success!")
     return True
-
-if __name__ == "__main__":
-    demo()
 

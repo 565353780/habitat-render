@@ -38,8 +38,6 @@ def make_cfg(settings):
     semantic_sensor_spec.sensor_subtype = habitat_sim.SensorSubType.PINHOLE
     sensor_specs.append(semantic_sensor_spec)
 
-    #  register_actions()
-
     move_dist = settings["move_dist"]
     rotate_angle = settings["rotate_angle"]
 
