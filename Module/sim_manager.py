@@ -11,9 +11,9 @@ from Data.rad import Rad
 from Data.pose import Pose
 
 from Module.sim_loader import SimLoader
-from Module.action_controller import ActionController
-from Module.pose_controller import PoseController
-from Module.cv_renderer import CVRenderer
+from Module.controller.action_controller import ActionController
+from Module.controller.pose_controller import PoseController
+from Module.renderer.cv_renderer import CVRenderer
 
 class SimManager(object):
     def __init__(self):
