@@ -7,62 +7,86 @@ from PIL import Image
 from habitat_sim.utils.common import d3_40_colors_rgb
 
 class CVRenderer(object):
-    def __init__(self):
+    def __init__(self, window_name="CVRenderer"):
+        self.window_name = window_name
         return
 
     def reset(self):
         return True
 
     def init(self, window_name="CVRenderer"):
-        cv2.namedWindow(window_name,cv2.WINDOW_AUTOSIZE)
+        self.window_name = window_name
+        cv2.namedWindow(self.window_name, cv2.WINDOW_AUTOSIZE)
         return True
 
-    def renderFrame(self, observations):
+    def getRGBImage(self, observations):
         if observations is None:
-            return True
+            return None
 
-        observations_keys = observations.keys()
+        if "color_sensor" not in observations.keys():
+            return None
+        rgb_obs = observations["color_sensor"]
 
-        rgb_obs = None
-        depth_obs = None
-        semantic_obs = None
+        rgb_image = rgb_obs[..., 0:3][...,::-1] / 255.0
+        return rgb_image
 
-        if "color_sensor" in observations_keys:
-            rgb_obs = observations["color_sensor"]
-        if "depth_sensor" in observations_keys:
-            depth_obs = observations["depth_sensor"]
-        if "semantic_sensor" in observations_keys:
-            semantic_obs = observations["semantic_sensor"]
+    def getDepthImage(self, observations):
+        if observations is None:
+            return None
 
-        if rgb_obs is None and \
-                depth_obs is None and \
-                semantic_obs is None:
-            return True
+        if "depth_sensor" not in observations.keys():
+            return None
+        depth_obs = observations["depth_sensor"]
 
-        arr = []
+        depth_image = np.clip(depth_obs, 0, 10) / 10.0
+        depth_image = cv2.cvtColor(depth_image, cv2.COLOR_GRAY2BGR)
+        return depth_image
 
-        if rgb_obs is not None:
-            rgb_img = rgb_obs[..., 0:3][...,::-1] / 255.0
-            arr.append(rgb_img)
+    def getSemanticImage(self, observations):
+        if observations is None:
+            return None
 
-        if depth_obs is not None:
-            depth_img = np.clip(depth_obs, 0, 10) / 10.0
-            depth_img = cv2.cvtColor(depth_img, cv2.COLOR_GRAY2BGR)
-            arr.append(depth_img)
+        if "semantic_sensor" not in observations.keys():
+            return None
+        semantic_obs = observations["semantic_sensor"]
 
-        if semantic_obs is not None:
-            semantic_img = Image.new("P",
-                (semantic_obs.shape[1], semantic_obs.shape[0]))
-            semantic_img.putpalette(d3_40_colors_rgb.flatten())
-            semantic_img.putdata((semantic_obs.flatten() % 40).astype(np.uint8))
-            semantic_img = semantic_img.convert("RGBA")
+        semantic_image = Image.new("P",
+            (semantic_obs.shape[1], semantic_obs.shape[0]))
+        semantic_image.putpalette(d3_40_colors_rgb.flatten())
+        semantic_image.putdata((semantic_obs.flatten() % 40).astype(np.uint8))
+        semantic_image = semantic_image.convert("RGBA")
 
-            semantic_img = np.array(semantic_img)
-            semantic_img = semantic_img[..., 0:3][...,::-1] / 255.0
-            arr.append(semantic_img)
+        semantic_image = np.array(semantic_image)
+        semantic_image = semantic_image[..., 0:3][...,::-1] / 255.0
+        return semantic_image
 
-        image = np.hstack(arr)
-        cv2.imshow("CVRenderer", image)
+    def getImage(self, observations):
+        rgb_image = self.getRGBImage(observations)
+        depth_image = self.getDepthImage(observations)
+        semantic_image = self.getSemanticImage(observations)
+
+        image_list = []
+        if rgb_image is not None:
+            image_list.append(rgb_image)
+        if depth_image is not None:
+            image_list.append(depth_image)
+        if semantic_image is not None:
+            image_list.append(semantic_image)
+
+        if len(image_list) == 0:
+            return None
+
+        image = np.hstack(image_list)
+        return image
+
+    def renderFrame(self, observations):
+        image = self.getImage(observations)
+        if image is None:
+            print("[ERROR][CVRenderer::renderFrame]")
+            print("\t image is None!")
+            return False
+
+        cv2.imshow(self.window_name, image)
         return True
 
     def close(self):
