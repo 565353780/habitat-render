@@ -58,6 +58,14 @@ class BasePoseController(object):
         pose = Pose(position, rad)
         return pose
 
+    def getPoseFromLookAt(self, look_at, move_direction):
+        position_x = look_at.x + move_direction.x
+        position_y = look_at.y + move_direction.y
+        position_z = look_at.z + move_direction.z
+        position = Point(position_x, position_y, position_z)
+        pose = self.getPoseByLookAt(position, look_at)
+        return pose
+
     def getAgentStateFromPose(self, pose):
         agent_state = AgentState()
         agent_state.position = pose.position.toArray()
@@ -72,11 +80,8 @@ class BasePoseController(object):
         return self.getAgentStateFromPose(pose)
 
     def getAgentStateFromAgentLookAt(self, look_at, move_direction):
-        position_x = look_at.x - move_direction.x
-        position_y = look_at.y - move_direction.y
-        position_z = look_at.z - move_direction.z
-        position = Point(position_x, position_y, position_z)
-        return self.getAgentStateByAgentLookAt(position, look_at)
+        pose = self.getPoseFromLookAt(look_at, move_direction)
+        return self.getAgentStateFromPose(pose)
 
     def getAgentState(self):
         return self.getAgentStateFromPose(self.pose)
@@ -161,4 +166,34 @@ class BasePoseController(object):
         print("[WARN][BasePoseController::getAgentStateByKey]")
         print("\t action not valid!")
         return self.getAgentState()
+
+def demo():
+    position = Point(2.7, 1.5, -3.0)
+    look_at = Point(1.0, 0.5, -5.5)
+    move_direction = Point(1.0, 1.0, 3.0)
+
+    base_pose_controller = BasePoseController()
+
+    pose = base_pose_controller.getPoseByLookAt(position, look_at)
+    print("[INFO][base_pose_controller::demo]")
+    print("\t getPoseByLookAt")
+    pose.outputInfo()
+
+    pose = base_pose_controller.getPoseFromLookAt(look_at, move_direction)
+    print("[INFO][base_pose_controller::demo]")
+    print("\t getPoseFromLookAt")
+    pose.outputInfo()
+
+    agent_state = base_pose_controller.getAgentStateByAgentLookAt(position, look_at)
+    print("[INFO][base_pose_controller::demo]")
+    print("\t getAgentStateByAgentLookAt")
+    print("agent_state: position", agent_state.position,
+          "rotation", agent_state.rotation)
+
+    agent_state = base_pose_controller.getAgentStateFromAgentLookAt(look_at, move_direction)
+    print("[INFO][base_pose_controller::demo]")
+    print("\t getAgentStateFromAgentLookAt")
+    print("agent_state: position", agent_state.position,
+          "rotation", agent_state.rotation)
+    return True
 
