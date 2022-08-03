@@ -10,8 +10,7 @@ from Data.point import Point
 from Data.pose import Pose
 
 from Method.rotations import \
-    getDirectionFromRad, getRadFromDirection, \
-    getRotationFromRad, getRotationFromDirection
+    getRadFromDirection, getRotationFromRad
 
 from Method.poses import \
     getMoveForwardPose, getMoveLeftPose, \
@@ -57,18 +56,6 @@ class PoseController(object):
     def resetPose(self):
         self.pose = INIT_POSE
         return True
-
-    def getDirectionFromRad(self, rad):
-        return getDirectionFromRad(rad)
-
-    def getRadFromDirection(self, direction):
-        return getRadFromDirection(direction)
-
-    def getRotationFromRad(self, rad):
-        return getRotationFromRad(rad)
-
-    def getRotationFromDirection(self, direction):
-        return getRotationFromDirection(direction)
 
     def getPoseByLookAt(self, position, look_at):
         direction_x = look_at.x - position.x
@@ -180,9 +167,6 @@ def demo():
     pose_controller = PoseController()
 
     direction.outputInfo()
-
-    rad = pose_controller.getRadFromDirection(direction)
-    rad.outputInfo()
 
     pose = pose_controller.getPoseByLookAt(position, look_at)
     pose.outputInfo()
