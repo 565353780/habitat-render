@@ -84,13 +84,10 @@ class CircleController(BasePoseController):
 
 def demo():
     position = Point(2.7, 1.5, -3.0)
-    direction = Point(1.0, 0.0, 0.0)
     look_at = Point(1.0, 0.5, -5.5)
     move_direction = Point(1.0, 1.0, 3.0)
 
     circle_controller = CircleController()
-
-    direction.outputInfo()
 
     pose = circle_controller.getPoseByLookAt(position, look_at)
     pose.outputInfo()
