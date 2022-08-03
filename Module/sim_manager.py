@@ -13,6 +13,7 @@ from Data.pose import Pose
 from Module.sim_loader import SimLoader
 from Module.controller.action_controller import ActionController
 from Module.controller.pose_controller import PoseController
+from Module.controller.circle_controller import CircleController
 from Module.renderer.cv_renderer import CVRenderer
 
 class SimManager(object):
