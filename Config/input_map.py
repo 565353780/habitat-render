@@ -14,5 +14,7 @@ INPUT_KEY_DICT = {
     "k": "turn_down",
     "u": "head_left",
     "o": "head_right",
+    "g": "move_close",
+    "a": "move_far",
 }
 
