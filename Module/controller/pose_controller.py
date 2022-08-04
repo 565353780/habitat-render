@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from Data.point import Point
-
 from Config.input_map import INPUT_KEY_DICT
 
 from Method.poses import \
@@ -68,21 +66,21 @@ class PoseController(BasePoseController):
         self.pose = getHeadRightPose(self.pose, rotate_angle)
         return True
 
-def demo():
-    position = Point(2.7, 1.5, -3.0)
-    look_at = Point(1.0, 0.5, -5.5)
-    move_direction = Point(1.0, 1.0, 3.0)
+    def test(self):
+        super().test()
 
+        input_key_list = INPUT_KEY_DICT.keys()
+        for input_key in input_key_list:
+            agent_state = self.getAgentStateByKey(input_key)
+            print("[INFO][PoseController::test]")
+            print("\t getAgentStateByKey")
+            print("\t agent_state: position", agent_state.position,
+                  "rotation", agent_state.rotation)
+        return True
+
+def demo():
     pose_controller = PoseController()
 
-    pose = pose_controller.getPoseByLookAt(position, look_at)
-    pose.outputInfo()
-
-    agent_state = pose_controller.getAgentStateByAgentLookAt(position, look_at)
-    agent_state = pose_controller.getAgentStateFromAgentLookAt(look_at, move_direction)
-
-    input_key_list = INPUT_KEY_DICT.keys()
-    for input_key in input_key_list:
-        agent_state = pose_controller.getAgentStateByKey(input_key)
+    pose_controller.test()
     return True
 
