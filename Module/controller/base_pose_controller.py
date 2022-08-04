@@ -3,6 +3,7 @@
 
 from habitat_sim import AgentState
 
+from Config.config import SIM_SETTING
 from Config.input_map import INPUT_KEY_DICT
 from Config.init_pose import INIT_POSE
 
@@ -148,8 +149,8 @@ class BasePoseController(object):
 
     def getAgentStateByKey(self,
                            input_key,
-                           move_dist=0.0,
-                           rotate_angle=0.0):
+                           move_dist=SIM_SETTING['move_dist'],
+                           rotate_angle=SIM_SETTING['rotate_angle']):
         if input_key not in self.input_key_list:
             print("[WARN][BasePoseController::getAgentStateByKey]")
             print("\t input_key not valid!")
@@ -175,26 +176,23 @@ class BasePoseController(object):
         pose = self.getPoseByLookAt(position, look_at)
         print("[INFO][BasePoseController::test]")
         print("\t getPoseByLookAt")
-        pose.outputInfo()
-        print()
+        pose.outputInfo(1)
 
         pose = self.getPoseFromLookAt(look_at, move_direction)
         print("[INFO][BasePoseController::test]")
         print("\t getPoseFromLookAt")
-        pose.outputInfo()
-        print()
+        pose.outputInfo(1)
 
         agent_state = self.getAgentStateByAgentLookAt(position, look_at)
         print("[INFO][BasePoseController::test]")
         print("\t getAgentStateByAgentLookAt")
-        print("agent_state: position", agent_state.position,
+        print("\t agent_state: position", agent_state.position,
               "rotation", agent_state.rotation)
-        print()
 
         agent_state = self.getAgentStateFromAgentLookAt(look_at, move_direction)
         print("[INFO][BasePoseController::test]")
         print("\t getAgentStateFromAgentLookAt")
-        print("agent_state: position", agent_state.position,
+        print("\t agent_state: position", agent_state.position,
               "rotation", agent_state.rotation)
         return True
 
