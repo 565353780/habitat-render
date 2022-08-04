@@ -21,6 +21,7 @@ class SimManager(object):
         self.sim_loader = SimLoader()
         self.action_controller = ActionController()
         self.pose_controller = PoseController()
+        self.circle_controller = CircleController()
         self.cv_renderer = CVRenderer()
         self.control_mode_dict = {
             "action": self.keyBoardActionControl,
@@ -89,8 +90,9 @@ class SimManager(object):
         if input_key == "q":
             return False
 
-        print("[WARN][SimManager::keyBoardCircleControl]")
-        print("\t To be finished...")
+        agent_state = self.circle_controller.getAgentStateByKey(input_key)
+
+        self.sim_loader.setAgentState(agent_state)
         return True
 
     def keyBoardControl(self, input_key):
@@ -138,7 +140,7 @@ def demo_test_speed():
 def demo():
     glb_file_path = \
         "/home/chli/scan2cad/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
-    control_mode = "pose"
+    control_mode = "circle"
     wait_key = 1
 
     sim_manager = SimManager()
