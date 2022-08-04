@@ -21,9 +21,9 @@ class Rad(object):
         return
 
     def update(self):
-        while self.up_rotate_rad < 0:
+        while self.up_rotate_rad < -pi:
             self.up_rotate_rad += self.two_pi
-        while self.up_rotate_rad >= self.two_pi:
+        while self.up_rotate_rad >= pi:
             self.up_rotate_rad -= self.two_pi
 
         if self.right_rotate_rad < -self.half_pi:
