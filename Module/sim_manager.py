@@ -80,10 +80,7 @@ class SimManager(object):
         if input_key == "q":
             return False
 
-        agent_state = self.pose_controller.getAgentStateByKey(
-            input_key,
-            SIM_SETTING["move_dist"],
-            SIM_SETTING["rotate_angle"])
+        agent_state = self.pose_controller.getAgentStateByKey(input_key)
 
         self.sim_loader.setAgentState(agent_state)
         return True
