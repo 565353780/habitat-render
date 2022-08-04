@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 SIM_SETTING = {
-    "width": 256,
-    "height": 256,
+    "width": 480,
+    "height": 360,
     "default_agent": 0,
     "move_dist": 0.25,
     "rotate_angle": 10.0,
