@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from Config.config import SIM_SETTING
 from Config.init_pose import INIT_RADIUS
 from Config.input_map import INPUT_KEY_DICT
 
@@ -19,15 +18,11 @@ from Module.controller.base_pose_controller import BasePoseController
 class CircleController(BasePoseController):
     def __init__(self):
         super(CircleController, self).__init__()
-
-
-        self.center_pose = self.pose
         self.radius = INIT_RADIUS
         return
 
     def reset(self):
         super().reset()
-        self.center_pose = self.pose
         self.radius = INIT_RADIUS
         return True
 
