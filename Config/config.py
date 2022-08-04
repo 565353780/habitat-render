@@ -7,6 +7,7 @@ SIM_SETTING = {
     "default_agent": 0,
     "move_dist": 0.25,
     "rotate_angle": 10.0,
+    "radius_move_dist": 0.25,
     "sensor_height": 1.5,
     "color_sensor": True,
     "depth_sensor": True,

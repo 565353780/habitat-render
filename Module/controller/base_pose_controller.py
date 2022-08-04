@@ -33,6 +33,10 @@ class BasePoseController(object):
             "head_left": self.headLeft,
             "head_right": self.headRight,
         }
+        self.radius_func_dict = {
+            "move_close": self.moveClose,
+            "move_far": self.moveFar,
+        }
         self.move_func_list = self.move_func_dict.keys()
         self.rotate_func_list = self.rotate_func_dict.keys()
 
@@ -147,10 +151,21 @@ class BasePoseController(object):
         print("\t this function not defined!")
         return False
 
+    def moveClose(self, move_dist):
+        print("[ERROR][BasePoseController::moveClose]")
+        print("\t this function not defined!")
+        return False
+
+    def movaFar(self, move_dist):
+        print("[ERROR][BasePoseController::movaFar]")
+        print("\t this function not defined!")
+        return False
+
     def getAgentStateByKey(self,
                            input_key,
                            move_dist=SIM_SETTING['move_dist'],
-                           rotate_angle=SIM_SETTING['rotate_angle']):
+                           rotate_angle=SIM_SETTING['rotate_angle'],
+                           radius_move_dist=SIM_SETTING['radius_move_dist']):
         if input_key not in self.input_key_list:
             print("[WARN][BasePoseController::getAgentStateByKey]")
             print("\t input_key not valid!")
@@ -162,6 +177,9 @@ class BasePoseController(object):
             return self.getAgentState()
         if action in self.rotate_func_list:
             self.rotate_func_dict[action](rotate_angle)
+            return self.getAgentState()
+        if action in self.radius_func_dict:
+            self.radius_func_dict[action](radius_move_dist)
             return self.getAgentState()
 
         print("[WARN][BasePoseController::getAgentStateByKey]")

@@ -66,6 +66,12 @@ class PoseController(BasePoseController):
         self.pose = getHeadRightPose(self.pose, rotate_angle)
         return True
 
+    def moveClose(self, move_dist):
+        return self.moveForward(move_dist)
+
+    def moveFar(self, move_dist):
+        return self.moveBackward(move_dist)
+
     def test(self):
         super().test()
 

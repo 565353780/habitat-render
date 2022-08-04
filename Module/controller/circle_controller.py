@@ -19,6 +19,8 @@ from Module.controller.base_pose_controller import BasePoseController
 class CircleController(BasePoseController):
     def __init__(self):
         super(CircleController, self).__init__()
+
+
         self.center_pose = self.pose
         self.radius = INIT_RADIUS
         return
@@ -81,6 +83,14 @@ class CircleController(BasePoseController):
 
     def headRight(self, rotate_angle):
         self.pose = getCircleHeadRightPose(self.pose, self.radius, rotate_angle)
+        return True
+
+    def moveClose(self, move_dist):
+        self.radius = max(self.radius - move_dist, 0.0)
+        return True
+
+    def moveFar(self, move_dist):
+        self.radius += move_dist
         return True
 
     def test(self):
