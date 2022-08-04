@@ -25,8 +25,8 @@ def getCenterRotatePose(pose,
     center_pose = getInversePose(pose, radius)
 
     rotate_rad = Rad(
-        np.deg2rad(up_rotate_angle),
-        np.deg2rad(-right_rotate_angle),
+        np.deg2rad(-up_rotate_angle),
+        np.deg2rad(right_rotate_angle),
         np.deg2rad(-front_rotate_angle))
     center_pose.rad.add(rotate_rad)
 
