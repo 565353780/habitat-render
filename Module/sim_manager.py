@@ -147,8 +147,8 @@ def demo():
     sim_manager.loadSettings(glb_file_path)
     sim_manager.setControlMode(control_mode)
 
-    sim_manager.pose_controller.pose = Pose(
-        Point(2.2, -0.25, -2.1), Rad(0.2, 0.0))
+    sim_manager.circle_controller.pose = Pose(
+        Point(1.8, -0.25, -2.2), Rad(0.2, 0.0))
     sim_manager.sim_loader.setAgentState(
         sim_manager.pose_controller.getAgentState())
 
