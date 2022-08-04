@@ -1,41 +1,53 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import numpy as np
 from copy import deepcopy
 
-from Method.rotations import \
-    getDirectionFromRad, getRadFromDirection
-from Method.poses import getMovePose, getRotatePose
+from Data.rad import Rad
 
-def getCenterPose(pose, radius):
-    rad = deepcopy(pose.rad)
+from Method.rotations import getDirectionFromRad
 
-    print("source rad")
-    rad.outputInfo()
-
-    direction = getDirectionFromRad(rad)
-
-    print("source direction")
-    direction.outputInfo()
-
-    inverse_direction = direction.inverse()
-
-    print("source inverse direction")
-    inverse_direction.outputInfo()
-
-    print(" check direction")
-    direction.outputInfo()
-
-    inverse_rad_1 = getRadFromDirection(inverse_direction)
-    inverse_rad_2 = rad.inverse()
-
-    print("2 inverse:")
-    inverse_rad_1.outputInfo()
-    inverse_rad_2.outputInfo()
-
+def getInversePose(pose, radius):
+    direction = getDirectionFromRad(pose.rad)
     move_dist = direction.scale(radius)
 
-    center_pose = deepcopy(pose)
-    center_pose.position.add(move_dist)
-    return center_pose
+    inverse_pose = deepcopy(pose)
+    inverse_pose.position.add(move_dist)
+    inverse_pose.rad = inverse_pose.rad.inverse()
+    return inverse_pose
+
+def getCenterRotatePose(pose,
+                        radius,
+                        up_rotate_angle,
+                        right_rotate_angle,
+                        front_rotate_angle):
+    center_pose = getInversePose(pose, radius)
+
+    rotate_rad = Rad(
+        np.deg2rad(up_rotate_angle),
+        np.deg2rad(-right_rotate_angle),
+        np.deg2rad(-front_rotate_angle))
+    center_pose.rad.add(rotate_rad)
+
+    new_pose = getInversePose(center_pose, radius)
+    return new_pose
+
+def getCircleTurnLeftPose(pose, radius, rotate_angle):
+    return getCenterRotatePose(pose, radius, rotate_angle, 0.0, 0.0)
+
+def getCircleTurnRightPose(pose, radius, rotate_angle):
+    return getCenterRotatePose(pose, radius, -rotate_angle, 0.0, 0.0)
+
+def getCircleTurnUpPose(pose, radius, rotate_angle):
+    return getCenterRotatePose(pose, radius, 0.0, rotate_angle, 0.0)
+
+def getCircleTurnDownPose(pose, radius, rotate_angle):
+    return getCenterRotatePose(pose, radius, 0.0, -rotate_angle, 0.0)
+
+def getCircleHeadLeftPose(pose, radius, rotate_angle):
+    return getCenterRotatePose(pose, radius, 0.0, 0.0, -rotate_angle)
+
+def getCircleHeadRightPose(pose, radius, rotate_angle):
+    return getCenterRotatePose(pose, radius, 0.0, 0.0, rotate_angle)
 
