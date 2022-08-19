@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from Config.input_map import INPUT_KEY_DICT
+from habitat_sim_manage.Config.input_map import INPUT_KEY_DICT
 
 class ActionController(object):
     def __init__(self):

@@ -3,14 +3,14 @@
 
 from habitat_sim import AgentState
 
-from Config.config import SIM_SETTING
-from Config.input_map import INPUT_KEY_DICT
-from Config.init_pose import INIT_POSE
+from habitat_sim_manage.Config.config import SIM_SETTING
+from habitat_sim_manage.Config.input_map import INPUT_KEY_DICT
+from habitat_sim_manage.Config.init_pose import INIT_POSE
 
-from Data.point import Point
-from Data.pose import Pose
+from habitat_sim_manage.Data.point import Point
+from habitat_sim_manage.Data.pose import Pose
 
-from Method.rotations import \
+from habitat_sim_manage.Method.rotations import \
     getRadFromDirection, getRotationFromRad
 
 class BasePoseController(object):

@@ -4,17 +4,15 @@
 from getch import getch
 from tqdm import tqdm
 
-from Config.config import SIM_SETTING
+from habitat_sim_manage.Data.point import Point
+from habitat_sim_manage.Data.rad import Rad
+from habitat_sim_manage.Data.pose import Pose
 
-from Data.point import Point
-from Data.rad import Rad
-from Data.pose import Pose
-
-from Module.sim_loader import SimLoader
-from Module.controller.action_controller import ActionController
-from Module.controller.pose_controller import PoseController
-from Module.controller.circle_controller import CircleController
-from Module.renderer.cv_renderer import CVRenderer
+from habitat_sim_manage.Module.sim_loader import SimLoader
+from habitat_sim_manage.Module.controller.action_controller import ActionController
+from habitat_sim_manage.Module.controller.pose_controller import PoseController
+from habitat_sim_manage.Module.controller.circle_controller import CircleController
+from habitat_sim_manage.Module.renderer.cv_renderer import CVRenderer
 
 class SimManager(object):
     def __init__(self):
@@ -139,7 +137,7 @@ def demo_test_speed():
 
 def demo():
     glb_file_path = \
-        "/home/chli/scan2cad/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
+        "/home/chli/chLi/ScanNet/scans/scene0474_02/scene0474_02_vh_clean.glb"
     control_mode = "circle"
     wait_key = 1
 

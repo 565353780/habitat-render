@@ -3,8 +3,8 @@
 
 import numpy as np
 
-from Data.point import Point
-from Data.rad import Rad
+from habitat_sim_manage.Data.point import Point
+from habitat_sim_manage.Data.rad import Rad
 
 class Pose(object):
     def __init__(self, position=Point(), rad=Rad(), scale=[1.0, 1.0, 1.0]):

@@ -4,9 +4,9 @@
 import os
 import habitat_sim
 
-from Config.config import SIM_SETTING
+from habitat_sim_manage.Config.config import SIM_SETTING
 
-from Method.actions import register_actions
+from habitat_sim_manage.Method.actions import register_actions
 register_actions()
 
 def make_cfg(settings):

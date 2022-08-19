@@ -7,8 +7,8 @@ import habitat_sim
 from habitat_sim.utils.common import \
     quat_from_angle_axis, quat_rotate_vector
 
-from Data.point import Point
-from Data.rad import Rad
+from habitat_sim_manage.Data.point import Point
+from habitat_sim_manage.Data.rad import Rad
 
 def getRadFromDirection(direction):
     x, y, z = direction.toList()

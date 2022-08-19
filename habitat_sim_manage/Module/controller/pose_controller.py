@@ -1,36 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from Config.init_pose import INIT_RADIUS
-from Config.input_map import INPUT_KEY_DICT
+from habitat_sim_manage.Config.input_map import INPUT_KEY_DICT
 
-from Method.poses import \
+from habitat_sim_manage.Method.poses import \
     getMoveForwardPose, getMoveLeftPose, \
     getMoveRightPose, getMoveBackwardPose, \
-    getMoveUpPose, getMoveDownPose
-from Method.circle_poses import \
-    getCircleTurnLeftPose, getCircleTurnRightPose, \
-    getCircleTurnUpPose, getCircleTurnDownPose, \
-    getCircleHeadLeftPose, getCircleHeadRightPose
+    getMoveUpPose, getMoveDownPose, \
+    getTurnLeftPose, getTurnRightPose, \
+    getTurnUpPose, getTurnDownPose, \
+    getHeadLeftPose, getHeadRightPose
 
-from Module.controller.base_pose_controller import BasePoseController
+from habitat_sim_manage.Module.controller.base_pose_controller import BasePoseController
 
-class CircleController(BasePoseController):
+class PoseController(BasePoseController):
     def __init__(self):
-        super(CircleController, self).__init__()
-        self.radius = INIT_RADIUS
+        super(PoseController, self).__init__()
         return
-
-    def reset(self):
-        super().reset()
-        self.radius = INIT_RADIUS
-        return True
-
-    def updateCenterPose(self):
-        return True
-
-    def updatePose(self):
-        return True
 
     def moveForward(self, move_dist):
         self.pose = getMoveForwardPose(self.pose, move_dist)
@@ -57,36 +43,34 @@ class CircleController(BasePoseController):
         return True
 
     def turnLeft(self, rotate_angle):
-        self.pose = getCircleTurnLeftPose(self.pose, self.radius, rotate_angle)
+        self.pose = getTurnLeftPose(self.pose, rotate_angle)
         return True
 
     def turnRight(self, rotate_angle):
-        self.pose = getCircleTurnRightPose(self.pose, self.radius, rotate_angle)
+        self.pose = getTurnRightPose(self.pose, rotate_angle)
         return True
 
     def turnUp(self, rotate_angle):
-        self.pose = getCircleTurnUpPose(self.pose, self.radius, rotate_angle)
+        self.pose = getTurnUpPose(self.pose, rotate_angle)
         return True
 
     def turnDown(self, rotate_angle):
-        self.pose = getCircleTurnDownPose(self.pose, self.radius, rotate_angle)
+        self.pose = getTurnDownPose(self.pose, rotate_angle)
         return True
 
     def headLeft(self, rotate_angle):
-        self.pose = getCircleHeadLeftPose(self.pose, self.radius, rotate_angle)
+        self.pose = getHeadLeftPose(self.pose, rotate_angle)
         return True
 
     def headRight(self, rotate_angle):
-        self.pose = getCircleHeadRightPose(self.pose, self.radius, rotate_angle)
+        self.pose = getHeadRightPose(self.pose, rotate_angle)
         return True
 
     def moveClose(self, move_dist):
-        self.radius = max(self.radius - move_dist, 0.0)
-        return True
+        return self.moveForward(move_dist)
 
     def moveFar(self, move_dist):
-        self.radius += move_dist
-        return True
+        return self.moveBackward(move_dist)
 
     def test(self):
         super().test()
@@ -94,15 +78,15 @@ class CircleController(BasePoseController):
         input_key_list = INPUT_KEY_DICT.keys()
         for input_key in input_key_list:
             agent_state = self.getAgentStateByKey(input_key)
-            print("[INFO][CircleController::test]")
+            print("[INFO][PoseController::test]")
             print("\t getAgentStateByKey")
             print("\t agent_state: position", agent_state.position,
                   "rotation", agent_state.rotation)
         return True
 
 def demo():
-    circle_controller = CircleController()
+    pose_controller = PoseController()
 
-    circle_controller.test()
+    pose_controller.test()
     return True
 

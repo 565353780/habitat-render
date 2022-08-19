@@ -3,10 +3,10 @@
 
 import habitat_sim
 
-from Config.config import SIM_SETTING
+from habitat_sim_manage.Config.config import SIM_SETTING
 
-from Method.infos import print_scene_recur
-from Method.configs import makeGLBConfig
+from habitat_sim_manage.Method.infos import print_scene_recur
+from habitat_sim_manage.Method.configs import makeGLBConfig
 
 class SimLoader(object):
     def __init__(self):
@@ -71,7 +71,7 @@ class SimLoader(object):
 
 def demo():
     glb_file_path = \
-        "/home/chli/scan2cad/scannet/scans/scene0474_02/scene0474_02_vh_clean.glb"
+        "/home/chli/chLi/ScanNet/scans/scene0474_02/scene0474_02_vh_clean.glb"
 
     sim_loader = SimLoader()
     sim_loader.loadSettings(glb_file_path)

@@ -4,9 +4,9 @@
 import numpy as np
 from copy import deepcopy
 
-from Data.rad import Rad
+from habitat_sim_manage.Data.rad import Rad
 
-from Method.rotations import getDirectionFromRad
+from habitat_sim_manage.Method.rotations import getDirectionFromRad
 
 def getInversePose(pose, radius):
     direction = getDirectionFromRad(pose.rad)

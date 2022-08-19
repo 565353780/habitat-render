@@ -5,9 +5,9 @@ from copy import deepcopy
 from math import pi, sqrt
 import numpy as np
 
-from Data.rad import Rad
+from habitat_sim_manage.Data.rad import Rad
 
-from Method.rotations import getDirectionFromRad
+from habitat_sim_manage.Method.rotations import getDirectionFromRad
 
 def getLength(point):
     x_2 = point.x * point.x
