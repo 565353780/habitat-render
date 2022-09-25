@@ -27,7 +27,7 @@ class CVRenderer(object):
             return None
         rgb_obs = observations["color_sensor"]
 
-        rgb_image = rgb_obs[..., 0:3][...,::-1] / 255.0
+        rgb_image = rgb_obs[..., :3][...,::-1] / 255.0
         return rgb_image
 
     def getDepthImage(self, observations):

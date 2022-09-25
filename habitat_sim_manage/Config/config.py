@@ -14,6 +14,5 @@ SIM_SETTING = {
     "semantic_sensor": True,
     "seed": 1,
     "enable_physics": False,
-    # "scene": "YOUR_GLB_FILE_PATH",
 }
 
