@@ -15,6 +15,11 @@ class Point(object):
         self.z = z
         return
 
+    @classmethod
+    def fromList(cls, xyz_list):
+        point = cls(xyz_list[0], xyz_list[1], xyz_list[2])
+        return point
+
     def getNorm(self):
         norm2 = self.x * self.x + self.y * self.y + self.z * self.z
         return sqrt(norm2)
