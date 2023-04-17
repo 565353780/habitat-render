@@ -14,7 +14,9 @@ from habitat_sim_manage.Module.controller.pose_controller import PoseController
 from habitat_sim_manage.Module.controller.circle_controller import CircleController
 from habitat_sim_manage.Module.renderer.cv_renderer import CVRenderer
 
+
 class SimManager(object):
+
     def __init__(self):
         self.sim_loader = SimLoader()
         self.action_controller = ActionController()
@@ -106,14 +108,15 @@ class SimManager(object):
             self.cv_renderer.waitKey(wait_key)
 
             agent_state = self.sim_loader.getAgentState()
-            print("agent_state: position", agent_state.position,
-                  "rotation", agent_state.rotation)
+            print("agent_state: position", agent_state.position, "rotation",
+                  agent_state.rotation)
 
             input_key = getch()
             if not self.keyBoardControl(input_key):
                 break
         self.cv_renderer.close()
         return True
+
 
 def demo_test_speed():
     glb_file_path = \
@@ -124,8 +127,8 @@ def demo_test_speed():
     sim_manager.loadSettings(glb_file_path)
     sim_manager.setControlMode(control_mode)
 
-    sim_manager.pose_controller.pose = Pose(
-        Point(1.7, 1.5, -2.5), Rad(0.2, 0.0))
+    sim_manager.pose_controller.pose = Pose(Point(1.7, 1.5, -2.5),
+                                            Rad(0.2, 0.0))
     sim_manager.sim_loader.setAgentState(
         sim_manager.pose_controller.getAgentState())
 
@@ -134,6 +137,7 @@ def demo_test_speed():
         input_key = list(input_key_list)[i % (len(input_key_list) - 2)]
         sim_manager.keyBoardPoseControl(input_key)
     return True
+
 
 def demo():
     glb_file_path = \
@@ -145,11 +149,10 @@ def demo():
     sim_manager.loadSettings(glb_file_path)
     sim_manager.setControlMode(control_mode)
 
-    sim_manager.circle_controller.pose = Pose(
-        Point(1.8, -0.25, -2.2), Rad(0.2, 0.0))
+    sim_manager.circle_controller.pose = Pose(Point(1.8, -0.25, -2.2),
+                                              Rad(0.2, 0.0))
     sim_manager.sim_loader.setAgentState(
         sim_manager.pose_controller.getAgentState())
 
     sim_manager.startKeyBoardControlRender(wait_key)
     return True
-

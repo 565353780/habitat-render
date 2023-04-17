@@ -8,7 +8,9 @@ from habitat_sim_manage.Config.config import SIM_SETTING
 from habitat_sim_manage.Method.infos import print_scene_recur
 from habitat_sim_manage.Method.configs import makeGLBConfig
 
+
 class SimLoader(object):
+
     def __init__(self):
         self.cfg = None
         self.sim = None
@@ -33,10 +35,9 @@ class SimLoader(object):
         return True
 
     def initAgent(self):
-        self.agent = self.sim.initialize_agent(
-            SIM_SETTING["default_agent"])
-        self.action_names = list(self.cfg.agents[
-            SIM_SETTING["default_agent"]].action_space.keys())
+        self.agent = self.sim.initialize_agent(SIM_SETTING["default_agent"])
+        self.action_names = list(
+            self.cfg.agents[SIM_SETTING["default_agent"]].action_space.keys())
 
         self.updateObservations()
         return True
@@ -69,6 +70,7 @@ class SimLoader(object):
         agent_state = self.agent.get_state()
         return agent_state
 
+
 def demo():
     glb_file_path = \
         "/home/chli/chLi/ScanNet/scans/scene0474_02/scene0474_02_vh_clean.glb"
@@ -78,4 +80,3 @@ def demo():
     print("[INFO][sim_loader::demo]")
     print("\t load scene success!")
     return True
-
