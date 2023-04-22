@@ -4,7 +4,9 @@
 import cv2
 import numpy as np
 from PIL import Image
+from copy import deepcopy
 from habitat_sim.utils.common import d3_40_colors_rgb
+
 
 class CVRenderer(object):
     def __init__(self, window_name="CVRenderer"):
@@ -25,9 +27,9 @@ class CVRenderer(object):
 
         if "color_sensor" not in observations.keys():
             return None
-        rgb_obs = observations["color_sensor"]
+        rgb_obs = deepcopy(observations["color_sensor"])
 
-        rgb_image = rgb_obs[..., :3][...,::-1] / 255.0
+        rgb_image = rgb_obs[..., :3][..., ::-1] / 255.0
         return rgb_image
 
     def getDepthImage(self, observations):
@@ -36,9 +38,10 @@ class CVRenderer(object):
 
         if "depth_sensor" not in observations.keys():
             return None
-        depth_obs = observations["depth_sensor"]
+        depth_obs = deepcopy(observations["depth_sensor"])
 
-        depth_image = np.clip(depth_obs, 0, 10) / 10.0
+        depth_clip = np.clip(depth_obs, 0.0, 10.0)
+        depth_image = depth_clip / 10.0
         depth_image = cv2.cvtColor(depth_image, cv2.COLOR_GRAY2BGR)
         return depth_image
 
@@ -48,16 +51,16 @@ class CVRenderer(object):
 
         if "semantic_sensor" not in observations.keys():
             return None
-        semantic_obs = observations["semantic_sensor"]
+        semantic_obs = deepcopy(observations["semantic_sensor"])
 
-        semantic_image = Image.new("P",
-            (semantic_obs.shape[1], semantic_obs.shape[0]))
+        semantic_image = Image.new(
+            "P", (semantic_obs.shape[1], semantic_obs.shape[0]))
         semantic_image.putpalette(d3_40_colors_rgb.flatten())
         semantic_image.putdata((semantic_obs.flatten() % 40).astype(np.uint8))
         semantic_image = semantic_image.convert("RGBA")
 
         semantic_image = np.array(semantic_image)
-        semantic_image = semantic_image[..., 0:3][...,::-1] / 255.0
+        semantic_image = semantic_image[..., 0:3][..., ::-1] / 255.0
         return semantic_image
 
     def getImage(self, observations):
@@ -97,6 +100,7 @@ class CVRenderer(object):
         cv2.waitKey(wait_key)
         return True
 
+
 def demo():
     cv_renderer = CVRenderer()
 
@@ -104,4 +108,3 @@ def demo():
     cv_renderer.waitKey(1)
     cv_renderer.close()
     return True
-
