@@ -15,4 +15,3 @@ SIM_SETTING = {
     "seed": 1,
     "enable_physics": False,
 }
-
