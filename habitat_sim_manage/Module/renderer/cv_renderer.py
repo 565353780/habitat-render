@@ -82,14 +82,20 @@ class CVRenderer(object):
         image = np.hstack(image_list)
         return image
 
-    def renderFrame(self, observations):
+    def renderFrame(self, observations, return_image=False):
         image = self.getImage(observations)
         if image is None:
             print("[ERROR][CVRenderer::renderFrame]")
             print("\t image is None!")
+            if return_image:
+                return None
             return False
 
         cv2.imshow(self.window_name, image)
+
+        if return_image:
+            return image
+
         return True
 
     def close(self):

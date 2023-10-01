@@ -1,9 +1,9 @@
-# Learn Habitat
+# Habitat Sim Manage
 
 ## Install
 
 ```bash
-conda create -n habitat python=3.8
+conda create -n habitat python=3.9
 conda activate habitat
 ./setup.sh
 ```
@@ -21,4 +21,3 @@ python demo.py
 ```
 
 ## Enjoy it~
-
