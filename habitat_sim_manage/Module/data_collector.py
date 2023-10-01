@@ -92,6 +92,69 @@ class DataCollector(SimManager):
 
         return True
 
+    def getCameraPose(self, pos, quat, axis='+x-z+y'):
+        sign_map = {
+            '+': 1.0,
+            '-': -1.0,
+        }
+        axis_map = {
+            'x': 0,
+            'y': 1,
+            'z': 2,
+        }
+
+        x_sign = sign_map[axis[0]]
+        y_sign = sign_map[axis[2]]
+        z_sign = sign_map[axis[4]]
+
+        x_idx = axis_map[axis[1]]
+        y_idx = axis_map[axis[3]]
+        z_idx = axis_map[axis[5]]
+
+        quat_list = [-quat.x, -quat.y, -quat.z, quat.w]
+
+        matrix = R.from_quat(quat_list).as_matrix()
+        dpos = - matrix.dot(pos)
+
+        new_pos = [x_sign * dpos[x_idx], y_sign * dpos[y_idx], z_sign * dpos[z_idx]]
+        new_quat = [quat_list[3], x_sign * quat_list[x_idx], y_sign * quat_list[y_idx], z_sign * quat_list[z_idx]]
+
+        return new_pos, new_quat
+
+    def getCameraPoseV2(self, pos, quat, axis='+x-z+y'):
+        sign_map = {
+            '+': 1,
+            '-': -1,
+        }
+        axis_map = {
+            'x': 0,
+            'y': 1,
+            'z': 2,
+        }
+
+        x_sign = sign_map[axis[0]]
+        y_sign = sign_map[axis[2]]
+        z_sign = sign_map[axis[4]]
+
+        x_idx = axis_map[axis[1]]
+        y_idx = axis_map[axis[3]]
+        z_idx = axis_map[axis[5]]
+
+        quat_list = [quat.x, quat.y, quat.z, quat.w]
+        new_quat = [
+            -1 * x_sign * quat_list[x_idx],
+            -1 * y_sign * quat_list[y_idx],
+            -1 * z_sign * quat_list[z_idx],
+            quat_list[3]
+        ]
+
+        matrix = R.from_quat(new_quat).as_matrix()
+
+        new_pos = [x_sign * pos[x_idx], y_sign * pos[y_idx], z_sign * pos[z_idx]]
+
+        new_pos = - matrix.dot(new_pos)
+
+        return new_pos, new_quat
 
     def saveImage(self, image):
         image = (image * 255.0).astype(np.uint8)
