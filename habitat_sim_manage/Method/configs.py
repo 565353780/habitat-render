@@ -83,4 +83,3 @@ def makeGLBConfig(glb_file_path):
     sim_settings = SIM_SETTING
     sim_settings["scene"] = glb_file_path
     return make_cfg(sim_settings)
-

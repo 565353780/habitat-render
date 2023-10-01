@@ -1,6 +1,7 @@
 import os
 import cv2
 import shutil
+import numpy as np
 from getch import getch
 
 from habitat_sim_manage.Config.config import SIM_SETTING
@@ -17,13 +18,13 @@ class DataCollector(SimManager):
         self.image_idx = 1
 
         if glb_file_path is not None:
-            self.loadSettings(glb_file_path)
+            assert self.loadSettings(glb_file_path)
 
         if control_mode is not None:
-            self.setControlMode(control_mode)
+            assert self.setControlMode(control_mode)
 
         if save_dataset_folder_path is not None:
-            self.createDataset(save_dataset_folder_path)
+            assert self.createDataset(save_dataset_folder_path)
         return
 
     def reset(self):
@@ -36,10 +37,24 @@ class DataCollector(SimManager):
         return True
 
     def saveSceneInfo(self):
+        hfov = None
+        for sensor in self.sim_loader.cfg.agents[0].sensor_specifications:
+            if sensor.uuid == 'color_sensor':
+                hfov = float(self.sim_loader.cfg.agents[0].sensor_specifications[0].hfov) * np.pi / 180.
+                break
+
+        if hfov is None:
+            print('[ERROR][DataCollector::saveSceneInfo]')
+            print('\t hfov get failed! please check your camera name and update me!')
+            return False
+
+        focal = SIM_SETTING['width'] / 2.0 / np.tan(hfov / 2.0)
+
         camera_txt = '1 PINHOLE ' + \
             str(SIM_SETTING['width']) + ' ' + \
             str(SIM_SETTING['height']) + ' ' + \
-            '800.1 800.1 ' + \
+            str(focal) + ' ' + \
+            str(focal) + ' ' + \
             str(SIM_SETTING['width'] / 2.0) + ' ' + \
             str(SIM_SETTING['height'] / 2.0)
 
@@ -67,11 +82,17 @@ class DataCollector(SimManager):
         os.makedirs(self.image_folder_path, exist_ok=True)
         os.makedirs(self.sparse_folder_path, exist_ok=True)
 
-        self.saveSceneInfo()
+        if not self.saveSceneInfo():
+            print('[ERROR][DataCollector::createDataset]')
+            print('\t saveSceneInfo failed!')
+            return False
+
         return True
 
 
     def saveImage(self, image):
+        image = (image * 255.0).astype(np.uint8)
+
         cv2.imwrite(self.image_folder_path + str(self.image_idx) + '.png', image)
 
         agent_state = self.sim_loader.getAgentState()
@@ -86,8 +107,8 @@ class DataCollector(SimManager):
         pose_txt += ' ' + str(quat.z)
         for i in range(3):
             pose_txt += ' ' + str(pos[i])
-        pose_txt += ' 1'
-        pose_txt += str(self.image_idx) + '.png'
+        pose_txt += ' 1 '
+        pose_txt += str(self.image_idx) + '.png\n'
 
         with open(self.image_pose_file, 'a') as f:
             f.write(pose_txt + '\n')
@@ -100,7 +121,7 @@ class DataCollector(SimManager):
         self.cv_renderer.init()
 
         while True:
-            image = self.cv_renderer.renderFrame(self.sim_loader.observations)
+            image = self.cv_renderer.renderFrame(self.sim_loader.observations, True)
             if image is None:
                 break
 

@@ -88,13 +88,13 @@ class CVRenderer(object):
             print("[ERROR][CVRenderer::renderFrame]")
             print("\t image is None!")
             if return_image:
-                return None
+                return self.getRGBImage(observations)
             return False
 
         cv2.imshow(self.window_name, image)
 
         if return_image:
-            return image
+            return self.getRGBImage(observations)
 
         return True
 
