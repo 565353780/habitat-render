@@ -2,7 +2,10 @@ import os
 import cv2
 import shutil
 import numpy as np
+from copy import deepcopy
 from getch import getch
+from scipy.spatial.transform import Rotation as R
+
 
 from habitat_sim_manage.Config.config import SIM_SETTING
 from habitat_sim_manage.Module.sim_manager import SimManager
@@ -97,16 +100,20 @@ class DataCollector(SimManager):
 
         agent_state = self.sim_loader.getAgentState()
 
-        pos = agent_state.position
-        quat = agent_state.rotation
+        pos = deepcopy(agent_state.position)
+        quat = deepcopy(agent_state.rotation)
+
+        matrix = R.from_quat([-quat.x, -quat.y, -quat.z, quat.w]).as_matrix()
+        new_pos = - matrix.dot(pos)
 
         pose_txt = str(self.image_idx)
         pose_txt += ' ' + str(quat.w)
         pose_txt += ' ' + str(quat.x)
-        pose_txt += ' ' + str(quat.y)
         pose_txt += ' ' + str(quat.z)
-        for i in range(3):
-            pose_txt += ' ' + str(pos[i])
+        pose_txt += ' ' + str(quat.y)
+        pose_txt += ' ' + str(new_pos[0])
+        pose_txt += ' ' + str(-new_pos[2])
+        pose_txt += ' ' + str(new_pos[1])
         pose_txt += ' 1 '
         pose_txt += str(self.image_idx) + '.png\n'
 

@@ -12,7 +12,8 @@ def demo():
 
     data_collector = DataCollector(glb_file_path, control_mode, save_dataset_folder_path)
 
-    data_collector.pose_controller.pose = Pose(Point(4, -0.5, -4.2), Rad(0.2, 0.0))
+    # data_collector.pose_controller.pose = Pose(Point(4, -0.5, -4.2), Rad(0.2, 0.0))
+    data_collector.pose_controller.pose = Pose(Point(0, 0, 0), Rad(0.0, 0.0))
     data_collector.sim_loader.setAgentState(
         data_collector.pose_controller.getAgentState())
 
