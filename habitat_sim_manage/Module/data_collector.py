@@ -109,7 +109,7 @@ class DataCollector(SimManager):
         pose_txt = str(self.image_idx)
         pose_txt += ' ' + str(quat.w)
         pose_txt += ' ' + str(quat.x)
-        pose_txt += ' ' + str(quat.z)
+        pose_txt += ' ' + str(-quat.z)
         pose_txt += ' ' + str(quat.y)
         pose_txt += ' ' + str(new_pos[0])
         pose_txt += ' ' + str(-new_pos[2])
