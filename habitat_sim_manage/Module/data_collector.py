@@ -117,7 +117,7 @@ class DataCollector(SimManager):
         dpos = - matrix.dot(pos)
 
         new_pos = [x_sign * dpos[x_idx], y_sign * dpos[y_idx], z_sign * dpos[z_idx]]
-        new_quat = [quat_list[3], x_sign * quat_list[x_idx], y_sign * quat_list[y_idx], z_sign * quat_list[z_idx]]
+        new_quat = [quat_list[3], -1.0 * x_sign * quat_list[x_idx], -1.0 * y_sign * quat_list[y_idx], -1.0 * z_sign * quat_list[z_idx]]
 
         return new_pos, new_quat
 
@@ -166,17 +166,16 @@ class DataCollector(SimManager):
         pos = deepcopy(agent_state.position)
         quat = deepcopy(agent_state.rotation)
 
-        matrix = R.from_quat([-quat.x, -quat.y, -quat.z, quat.w]).as_matrix()
-        new_pos = - matrix.dot(pos)
+        new_pos, new_quat = self.getCameraPose(pos, quat)
 
         pose_txt = str(self.image_idx)
-        pose_txt += ' ' + str(quat.w)
-        pose_txt += ' ' + str(quat.x)
-        pose_txt += ' ' + str(-quat.z)
-        pose_txt += ' ' + str(quat.y)
+        pose_txt += ' ' + str(new_quat[0])
+        pose_txt += ' ' + str(new_quat[1])
+        pose_txt += ' ' + str(new_quat[2])
+        pose_txt += ' ' + str(new_quat[3])
         pose_txt += ' ' + str(new_pos[0])
-        pose_txt += ' ' + str(-new_pos[2])
         pose_txt += ' ' + str(new_pos[1])
+        pose_txt += ' ' + str(new_pos[2])
         pose_txt += ' 1 '
         pose_txt += str(self.image_idx) + '.png\n'
 
